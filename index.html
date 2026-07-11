@@ -939,13 +939,7 @@
             <span class="label-icon">🎂</span> How old are you?
           </label>
           <select id="player-age">
-            <option value="9">9 Years Old</option>
-            <option value="10">10 Years Old</option>
-            <option value="11" selected>11 Years Old (6th Grade)</option>
-            <option value="12">12 Years Old</option>
-            <option value="13">13 Years Old</option>
-            <option value="14">14 Years Old</option>
-            <option value="15">15 Years Old</option>
+            <!-- Populated dynamically via JS from 5 to 39 -->
           </select>
         </div>
 
@@ -1972,6 +1966,17 @@
         "Ready to play! 🎉"
       ];
 
+      // Populate age dropdown dynamically from 5 to 39
+      const ageSelect = document.getElementById('player-age');
+      ageSelect.innerHTML = '';
+      for (let i = 5; i <= 39; i++) {
+        const opt = document.createElement('option');
+        opt.value = i;
+        opt.innerText = `${i} Years Old` + (i === 11 ? " (6th Grade)" : "");
+        if (i === 11) opt.selected = true;
+        ageSelect.appendChild(opt);
+      }
+
       let progress = 0;
       const interval = setInterval(() => {
         progress += Math.floor(Math.random() * 8) + 2;
@@ -2072,12 +2077,12 @@
       playerProfile.name = nameInput.value.trim();
       playerProfile.age = parseInt(document.getElementById('player-age').value);
       
-      // Determine difficulty tier based on age selection
-      let difficulty = "intermediate";
+      // Determine difficulty tier based on age selection (5 to 39 years old)
+      let difficulty = "intermediate"; // default (Ages 11 to 20)
       if (playerProfile.age <= 10) {
-        difficulty = "junior";
-      } else if (playerProfile.age >= 13) {
-        difficulty = "senior";
+        difficulty = "junior"; // Ages 5 to 10
+      } else if (playerProfile.age >= 21) {
+        difficulty = "senior"; // Ages 21 to 39
       }
 
       const selectedCategory = QUIZ_DATA[playerProfile.category];
@@ -2085,11 +2090,9 @@
       document.getElementById('player-avatar').innerText = selectedCategory.avatar;
       document.getElementById('quiz-player-name').innerText = playerProfile.name;
       
-      // Capitalize first letter of difficulty level for display
       const diffLabel = difficulty.charAt(0).toUpperCase() + difficulty.slice(1);
       document.getElementById('category-label').innerText = `${selectedCategory.title} (${diffLabel})`;
       
-      // Load selected category questions for the matching difficulty
       gameState.questions = [...selectedCategory.questions[difficulty]];
       gameState.currentQuestionIndex = 0;
       gameState.score = 0;
@@ -2125,7 +2128,6 @@
       document.getElementById('question-index-label').innerText = `Question ${qIndex + 1} of 10 for ${playerProfile.name}`;
       document.getElementById('score-badge').innerText = `Score: ${gameState.score}`;
       
-      // Progress Bar: scaled for 10 questions
       const progressPercent = (qIndex / 10) * 100;
       document.getElementById('progress-bar-fill').style.width = `${progressPercent}%`;
 
@@ -2201,11 +2203,9 @@
       if (question.type === 'mcq') {
         isCorrect = (userAnswer === question.answer);
       } else {
-        // Space-cleaned case-insensitive comparisons
         const cleanedUser = userAnswer.toLowerCase().replace(/\s+/g, ' ').trim();
         const cleanedAns = question.answer.toLowerCase().replace(/\s+/g, ' ').trim();
         
-        // Match numbers or clean text inclusions
         isCorrect = (cleanedUser === cleanedAns || 
                      cleanedUser.includes(cleanedAns) && cleanedAns.length > 2 ||
                      cleanedAns.includes(cleanedUser) && cleanedUser.length > 2);
@@ -2272,7 +2272,6 @@
 
       document.getElementById('final-score').innerText = gameState.score;
 
-      // 10 Stars update
       const stars = document.querySelectorAll('#stars-row .star');
       stars.forEach((star, idx) => {
         if (idx < gameState.score) {
