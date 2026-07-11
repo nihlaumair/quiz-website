@@ -1056,7 +1056,7 @@
             <span class="star">★</span>
             <span class="star">★</span>
             <span class="star">★</span>
-            <span class="star">star</span>
+            <span class="star">★</span>
             <span class="star">★</span>
             <span class="star">★</span>
             <span class="star">★</span>
@@ -1162,7 +1162,6 @@
     }
 
     function onPlayerStateChange(event) {
-      // Loop track automatically when ended
       if (event.data === YT.PlayerState.ENDED) {
         ytPlayer.playVideo();
       }
@@ -1205,7 +1204,7 @@
     }
 
     /* ==========================================================================
-       C. QUESTIONS DATA (90 questions total: 3 difficulties x 3 categories x 10 q)
+       C. QUESTIONS DATA (90 questions total - Completely unique, no duplicates!)
        ========================================================================== */
     const QUIZ_DATA = {
       logic: {
@@ -1319,10 +1318,10 @@
               answer: "Footsteps"
             },
             {
-              question: "I am full of holes but still hold water. What am I?",
+              question: "What has a head and a tail but no body?",
               type: "text",
-              answer: "sponge",
-              placeholder: "Type your one-word answer..."
+              answer: "coin",
+              placeholder: "Type your answer..."
             },
             {
               question: "What can travel around the world while staying in a corner?",
@@ -1506,10 +1505,10 @@
               placeholder: "Type the ocean name..."
             },
             {
-              question: "Which country is home to the Kangaroo?",
+              question: "Which Southeast Asian country is an archipelago containing the most active volcanoes?",
               type: "mcq",
-              options: ["Australia", "South Africa", "India", "Brazil"],
-              answer: "Australia"
+              options: ["Japan", "Indonesia", "Iceland", "Italy"],
+              answer: "Indonesia"
             },
             {
               question: "What is the capital city of Japan?",
@@ -1524,10 +1523,10 @@
               answer: "Great Wall of China"
             },
             {
-              question: "What is the name of the largest hot desert in the world?",
+              question: "Which is the largest island in the world?",
               type: "text",
-              answer: "Sahara",
-              placeholder: "Type the desert name..."
+              answer: "Greenland",
+              placeholder: "Type the island name..."
             }
           ],
           senior: [
@@ -1655,10 +1654,10 @@
               answer: "Cheetah"
             },
             {
-              question: "What force pulls things down toward the ground?",
+              question: "What is the name of the planet closest to Earth?",
               type: "text",
-              answer: "gravity",
-              placeholder: "Type force name..."
+              answer: "venus",
+              placeholder: "Type planet name..."
             }
           ],
           intermediate: [
@@ -1669,10 +1668,10 @@
               answer: "Mars"
             },
             {
-              question: "What gas do humans need to breathe in order to survive?",
+              question: "What is the name of the process by which plants make food using sunlight?",
               type: "text",
-              answer: "oxygen",
-              placeholder: "Type the gas name..."
+              answer: "photosynthesis",
+              placeholder: "Type the biological process..."
             },
             {
               question: "How many days does it take for Earth to complete one full orbit around the Sun?",
@@ -1687,10 +1686,10 @@
               placeholder: "Type the temperature number..."
             },
             {
-              question: "Which force pulls objects down toward the center of the Earth?",
+              question: "Which electrical unit is used to measure resistance?",
               type: "mcq",
-              options: ["Magnetism", "Friction", "Gravity", "Wind Force"],
-              answer: "Gravity"
+              options: ["Volt", "Ohm", "Ampere", "Watt"],
+              answer: "Ohm"
             },
             {
               question: "What is the center of our Solar System?",
@@ -1805,6 +1804,16 @@
       questions: []
     };
 
+    /* Helper function to shuffle array items (Fisher-Yates algorithm) */
+    function shuffleArray(array) {
+      const arr = [...array];
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
     /* ==========================================================================
        E. CONFETTI EFFECT
        ========================================================================== */
@@ -1915,7 +1924,6 @@
               document.getElementById('screen-loader').classList.remove('active');
               document.getElementById('screen-welcome').classList.add('active');
               document.getElementById('jukebox-box').style.display = 'flex';
-              // Trigger play on load
               playMusic();
             }, 800);
           }, 400);
@@ -2014,7 +2022,10 @@
       const diffLabel = difficulty.charAt(0).toUpperCase() + difficulty.slice(1);
       document.getElementById('category-label').innerText = `${selectedCategory.title} (${diffLabel})`;
       
-      gameState.questions = [...selectedCategory.questions[difficulty]];
+      // Load selected category questions + SHUFFLE them so they never repeat in same order!
+      const rawQuestions = selectedCategory.questions[difficulty];
+      gameState.questions = shuffleArray(rawQuestions);
+      
       gameState.currentQuestionIndex = 0;
       gameState.score = 0;
       gameState.answersLocked = false;
@@ -2023,7 +2034,6 @@
       renderQuestion();
     });
 
-    // Exit Quest button listener
     document.getElementById('btn-exit-game').addEventListener('click', () => {
       sfx.playClick();
       document.body.className = '';
@@ -2069,7 +2079,10 @@
         const grid = document.createElement('div');
         grid.className = 'mcq-grid';
         
-        question.options.forEach((opt, idx) => {
+        // Shuffle the MCQ options so the positions are different every time you play
+        const shuffledOptions = shuffleArray(question.options);
+        
+        shuffledOptions.forEach((opt, idx) => {
           const bullet = String.fromCharCode(65 + idx);
           const btn = document.createElement('button');
           btn.className = 'mcq-option';
