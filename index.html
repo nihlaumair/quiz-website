@@ -332,6 +332,16 @@
       cursor: pointer;
     }
 
+    /* Tiny, invisible container for YouTube Player API */
+    #yt-player-container {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+      pointer-events: none;
+      left: -9999px;
+    }
+
     /* Screen Adjustments to clear Jukebox on desktop */
     #screen-welcome {
       margin-top: 1rem;
@@ -441,6 +451,27 @@
       transform: none;
     }
 
+    /* Exit button styling */
+    .btn-exit {
+      background: hsl(350, 75%, 95%);
+      color: var(--error-color);
+      border: 2px solid hsl(350, 75%, 90%);
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 0.85rem;
+      padding: 0.4rem 0.8rem;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: var(--transition-bounce);
+      outline: none;
+    }
+
+    .btn-exit:hover {
+      background: var(--error-color);
+      color: white;
+      transform: scale(1.05);
+    }
+
     /* Category selection */
     .categories-grid {
       display: grid;
@@ -513,7 +544,7 @@
       justify-content: space-between;
       align-items: center;
       margin-bottom: 1.2rem;
-      margin-top: 1rem; /* Clear Jukebox */
+      margin-top: 1.2rem; /* Clear Jukebox */
       background: hsl(220, 20%, 97%);
       padding: 0.8rem 1.2rem;
       border-radius: 18px;
@@ -889,11 +920,16 @@
   <!-- Emitters Canvas -->
   <canvas id="confetti-canvas"></canvas>
 
+  <!-- Invisible YouTube Player Embed Target -->
+  <div id="yt-player-container">
+    <div id="yt-player-placeholder"></div>
+  </div>
+
   <!-- Jukebox Music Controller Panel -->
   <div class="jukebox-widget" id="jukebox-box" style="display: none;">
     <div class="jukebox-display">
       <span class="jukebox-title">Jukebox 📻</span>
-      <span class="jukebox-song" id="juke-song-title">Music: Off</span>
+      <span class="jukebox-song" id="juke-song-title">Loading Songs...</span>
     </div>
     <div class="jukebox-controls">
       <button class="juke-btn" id="btn-juke-play" title="Play/Pause">▶</button>
@@ -901,7 +937,7 @@
     </div>
     <div class="volume-slider-container">
       <span class="volume-icon" id="juke-vol-icon">🔊</span>
-      <input type="range" class="volume-slider" id="juke-vol-slider" min="0" max="1" step="0.05" value="0.5">
+      <input type="range" class="volume-slider" id="juke-vol-slider" min="0" max="1" step="0.05" value="0.3">
     </div>
   </div>
 
@@ -976,7 +1012,10 @@
             <span class="avatar-icon" id="player-avatar">🧠</span>
             <span class="profile-name" id="quiz-player-name">Player</span>
           </div>
-          <div class="score-badge" id="score-badge">Score: 0</div>
+          <div style="display: flex; gap: 0.8rem; align-items: center;">
+            <div class="score-badge" id="score-badge">Score: 0</div>
+            <button class="btn-exit" id="btn-exit-game" title="Exit Quest">🚪 Exit</button>
+          </div>
         </div>
 
         <div class="progress-section">
@@ -1017,7 +1056,7 @@
             <span class="star">★</span>
             <span class="star">★</span>
             <span class="star">★</span>
-            <span class="star">★</span>
+            <span class="star">star</span>
             <span class="star">★</span>
             <span class="star">★</span>
             <span class="star">★</span>
@@ -1045,249 +1084,128 @@
 
   <script>
     /* ==========================================================================
-       A. PLAYFUL CHIPTUNE SEQUENCER (WEB AUDIO API)
+       A. AUDIO CONTROL SYSTEM (SOUND EFFECTS)
        ========================================================================== */
-    class Jukebox {
+    class SFXController {
       constructor() {
         this.ctx = null;
-        this.gainNode = null;
-        this.isPlaying = false;
-        this.currentTrackIndex = 0;
-        this.volume = 0.3; // Default soft
-        this.timer = null;
-        this.noteIndex = 0;
-        
-        // Playlist definitions
-        this.tracks = [
-          {
-            name: "⚔️ Demon Slayer Hook",
-            tempo: 160,
-            notes: [
-              { f: 329.63, d: 2 }, { f: 392.00, d: 2 }, { f: 440.00, d: 2 }, { f: 493.88, d: 4 },
-              { f: 493.88, d: 2 }, { f: 440.00, d: 2 }, { f: 392.00, d: 2 }, { f: 440.00, d: 2 },
-              { f: 493.88, d: 2 }, { f: 440.00, d: 4 }, { f: 0, d: 2 },
-              { f: 493.88, d: 2 }, { f: 587.33, d: 2 }, { f: 659.25, d: 4 }, { f: 587.33, d: 2 },
-              { f: 493.88, d: 2 }, { f: 440.00, d: 2 }, { f: 392.00, d: 2 }, { f: 329.63, d: 6 }
-            ]
-          },
-          {
-            name: "❄️ Lovely (Billie Eilish)",
-            tempo: 100,
-            notes: [
-              { f: 659.25, d: 4 }, { f: 739.99, d: 4 }, { f: 587.33, d: 4 }, { f: 554.37, d: 4 },
-              { f: 493.88, d: 4 }, { f: 554.37, d: 4 }, { f: 587.33, d: 4 }, { f: 493.88, d: 8 },
-              { f: 0, d: 2 },
-              { f: 659.25, d: 4 }, { f: 739.99, d: 4 }, { f: 587.33, d: 4 }, { f: 554.37, d: 4 },
-              { f: 493.88, d: 4 }, { f: 554.37, d: 4 }, { f: 587.33, d: 4 }, { f: 493.88, d: 8 }
-            ]
-          },
-          {
-            name: "✨ Ya Man Sollaita",
-            tempo: 90,
-            notes: [
-              { f: 440.00, d: 4 }, { f: 493.88, d: 4 }, { f: 523.25, d: 4 }, { f: 493.88, d: 4 },
-              { f: 440.00, d: 4 }, { f: 392.00, d: 4 }, { f: 440.00, d: 8 },
-              { f: 523.25, d: 4 }, { f: 587.33, d: 4 }, { f: 659.25, d: 4 }, { f: 587.33, d: 4 },
-              { f: 523.25, d: 4 }, { f: 493.88, d: 4 }, { f: 440.00, d: 8 }
-            ]
-          },
-          {
-            name: "🎵 K-Pop Bounce",
-            tempo: 135,
-            notes: [
-              { f: 261.63, d: 2 }, { f: 329.63, d: 2 }, { f: 392.00, d: 2 }, { f: 523.25, d: 2 },
-              { f: 392.00, d: 2 }, { f: 329.63, d: 2 }, { f: 261.63, d: 2 }, { f: 293.66, d: 2 },
-              { f: 349.23, d: 2 }, { f: 440.00, d: 2 }, { f: 587.33, d: 2 }, { f: 440.00, d: 2 },
-              { f: 349.23, d: 2 }, { f: 293.66, d: 2 }, { f: 329.63, d: 2 }, { f: 392.00, d: 2 }
-            ]
-          },
-          {
-            name: "👾 Retro Arcade Quest",
-            tempo: 150,
-            notes: [
-              { f: 659.25, d: 2 }, { f: 659.25, d: 2 }, { f: 0, d: 2 }, { f: 659.25, d: 2 },
-              { f: 0, d: 2 }, { f: 523.25, d: 2 }, { f: 659.25, d: 2 }, { f: 0, d: 2 },
-              { f: 783.99, d: 4 }, { f: 0, d: 4 }, { f: 392.00, d: 4 }, { f: 0, d: 4 }
-            ]
-          },
-          {
-            name: "☕ Study Lo-Fi Chill",
-            tempo: 80,
-            notes: [
-              { f: 261.63, d: 8 }, { f: 329.63, d: 8 }, { f: 392.00, d: 8 }, { f: 493.88, d: 8 },
-              { f: 349.23, d: 8 }, { f: 440.00, d: 8 }, { f: 523.25, d: 8 }, { f: 659.25, d: 8 }
-            ]
-          }
-        ];
       }
-
       init() {
         if (!this.ctx) {
           this.ctx = new (window.AudioContext || window.webkitAudioContext)();
-          this.gainNode = this.ctx.createGain();
-          this.gainNode.gain.setValueAtTime(this.volume, this.ctx.currentTime);
-          this.gainNode.connect(this.ctx.destination);
-        }
-        if (this.ctx.state === 'suspended') {
-          this.ctx.resume();
         }
       }
-
-      play() {
-        this.init();
-        if (this.isPlaying) return;
-        this.isPlaying = true;
-        this.noteIndex = 0;
-        this.scheduleNextNote();
-        document.getElementById('btn-juke-play').innerText = "⏸";
-        document.getElementById('juke-song-title').innerText = this.tracks[this.currentTrackIndex].name;
+      playClick() {
+        try { this.init(); const osc = this.ctx.createOscillator(); const g = this.ctx.createGain(); osc.connect(g); g.connect(this.ctx.destination); osc.frequency.setValueAtTime(400, this.ctx.currentTime); osc.frequency.exponentialRampToValueAtTime(800, this.ctx.currentTime + 0.08); g.gain.setValueAtTime(0.1, this.ctx.currentTime); g.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.08); osc.start(); osc.stop(this.ctx.currentTime + 0.08); } catch(e){}
       }
-
-      pause() {
-        this.isPlaying = false;
-        if (this.timer) clearTimeout(this.timer);
-        document.getElementById('btn-juke-play').innerText = "▶";
-        document.getElementById('juke-song-title').innerText = "Music: Paused";
+      playCorrect() {
+        try { this.init(); const now = this.ctx.currentTime; const notes = [523.25, 659.25, 783.99, 1046.50]; notes.forEach((freq, idx) => { const osc = this.ctx.createOscillator(); const g = this.ctx.createGain(); osc.connect(g); g.connect(this.ctx.destination); osc.type = 'triangle'; osc.frequency.setValueAtTime(freq, now + idx * 0.07); g.gain.setValueAtTime(0, now + idx * 0.07); g.gain.linearRampToValueAtTime(0.12, now + idx * 0.07 + 0.02); g.gain.exponentialRampToValueAtTime(0.01, now + idx * 0.07 + 0.15); osc.start(now + idx * 0.07); osc.stop(now + idx * 0.07 + 0.2); }); } catch(e){}
       }
+      playIncorrect() {
+        try { this.init(); const now = this.ctx.currentTime; const osc = this.ctx.createOscillator(); const g = this.ctx.createGain(); osc.connect(g); g.connect(this.ctx.destination); osc.type = 'sawtooth'; osc.frequency.setValueAtTime(220, now); osc.frequency.linearRampToValueAtTime(110, now + 0.25); g.gain.setValueAtTime(0.12, now); g.gain.exponentialRampToValueAtTime(0.01, now + 0.3); osc.start(now); osc.stop(now + 0.3); } catch(e){}
+      }
+      playVictory() {
+        try { this.init(); const now = this.ctx.currentTime; const notes = [523.25, 659.25, 783.99, 1046.50, 880.00, 1046.50]; notes.forEach((freq, idx) => { const osc = this.ctx.createOscillator(); const g = this.ctx.createGain(); osc.connect(g); g.connect(this.ctx.destination); osc.type = 'sine'; osc.frequency.setValueAtTime(freq, now + idx * 0.12); g.gain.setValueAtTime(0.1, now + idx * 0.12); g.gain.exponentialRampToValueAtTime(0.01, now + idx * 0.12 + 0.12); osc.start(now + idx * 0.12); osc.stop(now + idx * 0.12 + 0.15); }); } catch(e){}
+      }
+    }
+    const sfx = new SFXController();
 
-      toggle() {
-        if (this.isPlaying) {
-          this.pause();
-        } else {
-          this.play();
+    /* ==========================================================================
+       B. YOUTUBE REAL SONG PLAYLIST MANAGER
+       ========================================================================== */
+    const JUKEBOX_SONGS = [
+      { name: "🎵 K-Pop: BTS - Dynamite", id: "gdZLi9oWNZg" },
+      { name: "⚔️ Demon Slayer: Gurenge", id: "MpYy6YUN-Js" },
+      { name: "❄️ Lovely - Billie Eilish", id: "V1Pl8CzNzCw" },
+      { name: "✨ Ya Man Sollaita (Arabic)", id: "Z5Hl3G4wGss" },
+      { name: "🎧 Shape of You - Ed Sheeran", id: "JGwWNGJdvx8" }
+    ];
+
+    let ytPlayer = null;
+    let currentSongIndex = 0;
+    let isMusicPlaying = false;
+    let isPlayerReady = false;
+
+    // Load YouTube API asynchronously
+    const tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    const firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+    function onYouTubeIframeAPIReady() {
+      ytPlayer = new YT.Player('yt-player-placeholder', {
+        height: '1',
+        width: '1',
+        videoId: JUKEBOX_SONGS[currentSongIndex].id,
+        playerVars: {
+          'autoplay': 0,
+          'controls': 0,
+          'disablekb': 1,
+          'fs': 0,
+          'rel': 0,
+          'showinfo': 0,
+          'modestbranding': 1,
+          'loop': 1,
+          'playlist': JUKEBOX_SONGS[currentSongIndex].id
+        },
+        events: {
+          'onReady': onPlayerReady,
+          'onStateChange': onPlayerStateChange
         }
-      }
+      });
+    }
 
-      next() {
-        this.pause();
-        this.currentTrackIndex = (this.currentTrackIndex + 1) % this.tracks.length;
-        this.play();
-      }
+    function onPlayerReady(event) {
+      isPlayerReady = true;
+      document.getElementById('juke-song-title').innerText = JUKEBOX_SONGS[currentSongIndex].name;
+      ytPlayer.setVolume(30); // 30% soft volume default
+    }
 
-      setVolume(val) {
-        this.volume = val;
-        if (this.gainNode) {
-          this.gainNode.gain.setValueAtTime(val, this.ctx.currentTime);
-        }
-      }
-
-      scheduleNextNote() {
-        if (!this.isPlaying) return;
-
-        const track = this.tracks[this.currentTrackIndex];
-        const note = track.notes[this.noteIndex];
-        
-        const stepDuration = 60 / track.tempo / 4; 
-        const noteDuration = note.d * stepDuration;
-
-        if (note.f > 0) {
-          this.playTone(note.f, noteDuration);
-        }
-
-        this.noteIndex = (this.noteIndex + 1) % track.notes.length;
-        this.timer = setTimeout(() => {
-          this.scheduleNextNote();
-        }, noteDuration * 1000);
-      }
-
-      playTone(freq, duration) {
-        const osc = this.ctx.createOscillator();
-        const noteGain = this.ctx.createGain();
-
-        osc.connect(noteGain);
-        noteGain.connect(this.gainNode);
-
-        osc.type = (this.currentTrackIndex === 4) ? 'square' : 'triangle';
-        osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
-
-        noteGain.gain.setValueAtTime(0, this.ctx.currentTime);
-        noteGain.gain.linearRampToValueAtTime(0.25, this.ctx.currentTime + 0.01);
-        noteGain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + duration - 0.02);
-
-        osc.start();
-        osc.stop(this.ctx.currentTime + duration);
-      }
-
-      playClickSFX() {
-        try {
-          this.init();
-          const osc = this.ctx.createOscillator();
-          const g = this.ctx.createGain();
-          osc.connect(g);
-          g.connect(this.ctx.destination);
-          osc.frequency.setValueAtTime(400, this.ctx.currentTime);
-          osc.frequency.exponentialRampToValueAtTime(800, this.ctx.currentTime + 0.08);
-          g.gain.setValueAtTime(0.1, this.ctx.currentTime);
-          g.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.08);
-          osc.start();
-          osc.stop(this.ctx.currentTime + 0.08);
-        } catch(e){}
-      }
-
-      playCorrectSFX() {
-        try {
-          this.init();
-          const now = this.ctx.currentTime;
-          const notes = [523.25, 659.25, 783.99, 1046.50];
-          notes.forEach((freq, idx) => {
-            const osc = this.ctx.createOscillator();
-            const g = this.ctx.createGain();
-            osc.connect(g);
-            g.connect(this.ctx.destination);
-            osc.type = 'triangle';
-            osc.frequency.setValueAtTime(freq, now + idx * 0.07);
-            g.gain.setValueAtTime(0, now + idx * 0.07);
-            g.gain.linearRampToValueAtTime(0.12, now + idx * 0.07 + 0.02);
-            g.gain.exponentialRampToValueAtTime(0.01, now + idx * 0.07 + 0.15);
-            osc.start(now + idx * 0.07);
-            osc.stop(now + idx * 0.07 + 0.2);
-          });
-        } catch(e){}
-      }
-
-      playIncorrectSFX() {
-        try {
-          this.init();
-          const now = this.ctx.currentTime;
-          const osc = this.ctx.createOscillator();
-          const g = this.ctx.createGain();
-          osc.connect(g);
-          g.connect(this.ctx.destination);
-          osc.type = 'sawtooth';
-          osc.frequency.setValueAtTime(220, now);
-          osc.frequency.linearRampToValueAtTime(110, now + 0.25);
-          g.gain.setValueAtTime(0.12, now);
-          g.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
-          osc.start(now);
-          osc.stop(now + 0.3);
-        } catch(e){}
-      }
-
-      playVictorySFX() {
-        try {
-          this.init();
-          const now = this.ctx.currentTime;
-          const notes = [523.25, 659.25, 783.99, 1046.50, 880.00, 1046.50];
-          notes.forEach((freq, idx) => {
-            const osc = this.ctx.createOscillator();
-            const g = this.ctx.createGain();
-            osc.connect(g);
-            g.connect(this.ctx.destination);
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(freq, now + idx * 0.12);
-            g.gain.setValueAtTime(0.1, now + idx * 0.12);
-            g.gain.exponentialRampToValueAtTime(0.01, now + idx * 0.12 + 0.12);
-            osc.start(now + idx * 0.12);
-            osc.stop(now + idx * 0.12 + 0.15);
-          });
-        } catch(e){}
+    function onPlayerStateChange(event) {
+      // Loop track automatically when ended
+      if (event.data === YT.PlayerState.ENDED) {
+        ytPlayer.playVideo();
       }
     }
 
-    const jukebox = new Jukebox();
+    function playMusic() {
+      if (isPlayerReady && ytPlayer) {
+        ytPlayer.playVideo();
+        isMusicPlaying = true;
+        document.getElementById('btn-juke-play').innerText = "⏸";
+        document.getElementById('juke-song-title').innerText = JUKEBOX_SONGS[currentSongIndex].name;
+      }
+    }
+
+    function pauseMusic() {
+      if (isPlayerReady && ytPlayer) {
+        ytPlayer.pauseVideo();
+        isMusicPlaying = false;
+        document.getElementById('btn-juke-play').innerText = "▶";
+        document.getElementById('juke-song-title').innerText = "Music: Paused";
+      }
+    }
+
+    function toggleMusic() {
+      if (isMusicPlaying) {
+        pauseMusic();
+      } else {
+        playMusic();
+      }
+    }
+
+    function nextMusic() {
+      if (isPlayerReady && ytPlayer) {
+        currentSongIndex = (currentSongIndex + 1) % JUKEBOX_SONGS.length;
+        ytPlayer.loadVideoById(JUKEBOX_SONGS[currentSongIndex].id);
+        document.getElementById('juke-song-title').innerText = JUKEBOX_SONGS[currentSongIndex].name;
+        isMusicPlaying = true;
+        document.getElementById('btn-juke-play').innerText = "⏸";
+      }
+    }
 
     /* ==========================================================================
-       B. QUESTIONS DATA (90 questions total: 3 difficulties x 3 categories x 10 q)
+       C. QUESTIONS DATA (90 questions total: 3 difficulties x 3 categories x 10 q)
        ========================================================================== */
     const QUIZ_DATA = {
       logic: {
@@ -1872,7 +1790,7 @@
     };
 
     /* ==========================================================================
-       C. STATE MANAGEMENT
+       D. STATE MANAGEMENT
        ========================================================================== */
     let playerProfile = {
       name: "",
@@ -1888,7 +1806,7 @@
     };
 
     /* ==========================================================================
-       D. CONFETTI EFFECT
+       E. CONFETTI EFFECT
        ========================================================================== */
     let confettiTimer = null;
     function triggerConfetti() {
@@ -1950,7 +1868,7 @@
     });
 
     /* ==========================================================================
-       E. PRELOADER ENGINE
+       F. PRELOADER ENGINE
        ========================================================================== */
     window.addEventListener('DOMContentLoaded', () => {
       const loadPercentText = document.getElementById('load-percent');
@@ -1960,7 +1878,7 @@
       const statuses = [
         "Unpacking brain cells... 🧠",
         "Loading logic nodes... 💡",
-        "Tuning synthesized song cassette... 🎵",
+        "Connecting real sound cassette... 🎵",
         "Polishing colorful buttons... 🎨",
         "Opening portal to quiz quest... 🚀",
         "Ready to play! 🎉"
@@ -1997,7 +1915,8 @@
               document.getElementById('screen-loader').classList.remove('active');
               document.getElementById('screen-welcome').classList.add('active');
               document.getElementById('jukebox-box').style.display = 'flex';
-              jukebox.play();
+              // Trigger play on load
+              playMusic();
             }, 800);
           }, 400);
         }
@@ -2005,7 +1924,7 @@
     });
 
     /* ==========================================================================
-       F. JUKEBOX CONTROLLER INTERACTION
+       G. JUKEBOX CONTROLLER INTERACTION
        ========================================================================== */
     const jukePlayBtn = document.getElementById('btn-juke-play');
     const jukeNextBtn = document.getElementById('btn-juke-next');
@@ -2013,16 +1932,18 @@
     const jukeVolIcon = document.getElementById('juke-vol-icon');
 
     jukePlayBtn.addEventListener('click', () => {
-      jukebox.toggle();
+      toggleMusic();
     });
 
     jukeNextBtn.addEventListener('click', () => {
-      jukebox.next();
+      nextMusic();
     });
 
     jukeVolSlider.addEventListener('input', (e) => {
       const val = parseFloat(e.target.value);
-      jukebox.setVolume(val);
+      if (isPlayerReady && ytPlayer) {
+        ytPlayer.setVolume(val * 100);
+      }
       if (val === 0) {
         jukeVolIcon.innerText = "🔇";
       } else if (val < 0.4) {
@@ -2035,17 +1956,17 @@
     jukeVolIcon.addEventListener('click', () => {
       if (jukeVolSlider.value > 0) {
         jukeVolSlider.value = 0;
-        jukebox.setVolume(0);
+        if (isPlayerReady && ytPlayer) ytPlayer.setVolume(0);
         jukeVolIcon.innerText = "🔇";
       } else {
         jukeVolSlider.value = 0.3;
-        jukebox.setVolume(0.3);
+        if (isPlayerReady && ytPlayer) ytPlayer.setVolume(30);
         jukeVolIcon.innerText = "🔈";
       }
     });
 
     /* ==========================================================================
-       G. WELCOME PAGE VALIDATION & CARD CLICKS
+       H. WELCOME PAGE VALIDATION & CARD CLICKS
        ========================================================================== */
     const nameInput = document.getElementById('player-name');
     const startBtn = document.getElementById('btn-start');
@@ -2064,7 +1985,7 @@
 
     categoryCards.forEach(card => {
       card.addEventListener('click', () => {
-        jukebox.playClickSFX();
+        sfx.playClick();
         categoryCards.forEach(c => c.classList.remove('selected'));
         card.classList.add('selected');
         playerProfile.category = card.getAttribute('data-category');
@@ -2072,17 +1993,17 @@
     });
 
     startBtn.addEventListener('click', () => {
-      jukebox.playClickSFX();
+      sfx.playClick();
       
       playerProfile.name = nameInput.value.trim();
       playerProfile.age = parseInt(document.getElementById('player-age').value);
       
       // Determine difficulty tier based on age selection (5 to 39 years old)
-      let difficulty = "intermediate"; // default (Ages 11 to 20)
+      let difficulty = "intermediate"; 
       if (playerProfile.age <= 10) {
-        difficulty = "junior"; // Ages 5 to 10
+        difficulty = "junior"; 
       } else if (playerProfile.age >= 21) {
-        difficulty = "senior"; // Ages 21 to 39
+        difficulty = "senior"; 
       }
 
       const selectedCategory = QUIZ_DATA[playerProfile.category];
@@ -2102,8 +2023,16 @@
       renderQuestion();
     });
 
+    // Exit Quest button listener
+    document.getElementById('btn-exit-game').addEventListener('click', () => {
+      sfx.playClick();
+      document.body.className = '';
+      switchScreen('screen-game', 'screen-welcome');
+      checkStartValidity();
+    });
+
     document.getElementById('btn-replay').addEventListener('click', () => {
-      jukebox.playClickSFX();
+      sfx.playClick();
       document.body.className = '';
       switchScreen('screen-gameover', 'screen-welcome');
       checkStartValidity();
@@ -2115,7 +2044,7 @@
     }
 
     /* ==========================================================================
-       H. GAMEPLAY ENGINE & RENDERING
+       I. GAMEPLAY ENGINE & RENDERING
        ========================================================================== */
     function renderQuestion() {
       const qIndex = gameState.currentQuestionIndex;
@@ -2225,7 +2154,7 @@
         scoreBadge.classList.add('pop');
         setTimeout(() => scoreBadge.classList.remove('pop'), 600);
         
-        jukebox.playCorrectSFX();
+        sfx.playCorrect();
         triggerConfetti();
 
         const positivePhrases = [
@@ -2242,7 +2171,7 @@
       } else {
         card.classList.add('incorrect-flash');
         overlay.classList.add('incorrect');
-        jukebox.playIncorrectSFX();
+        sfx.playIncorrect();
 
         fEmoji.innerText = '🤔';
         fTitle.innerText = "Oops!";
@@ -2262,12 +2191,12 @@
     }
 
     /* ==========================================================================
-       I. GAME OVER SCREEN
+       J. GAME OVER SCREEN
        ========================================================================== */
     function finishGame() {
       document.getElementById('progress-bar-fill').style.width = '100%';
       
-      jukebox.playVictorySFX();
+      sfx.playVictory();
       triggerConfetti();
 
       document.getElementById('final-score').innerText = gameState.score;
