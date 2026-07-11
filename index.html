@@ -1111,14 +1111,17 @@
     const sfx = new SFXController();
 
     /* ==========================================================================
-       B. YOUTUBE REAL SONG PLAYLIST MANAGER
+       B. YOUTUBE REAL SONG PLAYLIST MANAGER (Restricted embeds removed/updated)
        ========================================================================== */
     const JUKEBOX_SONGS = [
-      { name: "🎵 K-Pop: BTS - Dynamite", id: "gdZLi9oWNZg" },
-      { name: "⚔️ Demon Slayer: Gurenge", id: "MpYy6YUN-Js" },
-      { name: "❄️ Lovely - Billie Eilish", id: "V1Pl8CzNzCw" },
-      { name: "✨ Ya Man Sollaita (Arabic)", id: "Z5Hl3G4wGss" },
-      { name: "🎧 Shape of You - Ed Sheeran", id: "JGwWNGJdvx8" }
+      { name: "💖 Hubbuka Fi Qalbi - Nasheed", id: "VatATQACUhE" },
+      { name: "🌸 Bi Saraha - Abeer Nehme", id: "rH9mDCe83v0" },
+      { name: "⚡ Believer - Imagine Dragons", id: "7t2MexigRRk" },
+      { name: "🔥 Dai Dai - FIFA 2026 Anthem", id: "V9cdkzPqdAs" },
+      { name: "✨ Ya Man Sollaita - Maher Zain", id: "Z5Hl3G4wGss" },
+      { name: "⚔️ Demon Slayer: Gurenge", id: "R4aQ7l_Wj8M" },
+      { name: "❄️ Lovely - Billie Eilish", id: "LrqYcxwEf94" },
+      { name: "🎵 K-Pop: BTS - Dynamite", id: "gdZLi9oWNZg" }
     ];
 
     let ytPlayer = null;
@@ -1158,7 +1161,7 @@
     function onPlayerReady(event) {
       isPlayerReady = true;
       document.getElementById('juke-song-title').innerText = JUKEBOX_SONGS[currentSongIndex].name;
-      ytPlayer.setVolume(30); // 30% soft volume default
+      ytPlayer.setVolume(30); // 30% volume default
     }
 
     function onPlayerStateChange(event) {
@@ -1204,7 +1207,7 @@
     }
 
     /* ==========================================================================
-       C. QUESTIONS DATA (90 questions total - Completely unique, no duplicates!)
+       C. QUESTIONS DATA (15 unique questions per difficulty pool x 3 x 3 = 135 total)
        ========================================================================== */
     const QUIZ_DATA = {
       logic: {
@@ -1272,6 +1275,36 @@
               type: "text",
               answer: "name",
               placeholder: "Type your answer..."
+            },
+            {
+              question: "What has to be broken before you can use it?",
+              type: "text",
+              answer: "egg",
+              placeholder: "Type your answer..."
+            },
+            {
+              question: "What is as light as a feather, but even the strongest person can't hold it for long?",
+              type: "text",
+              answer: "breath",
+              placeholder: "Type your answer..."
+            },
+            {
+              question: "What has a neck but no head?",
+              type: "text",
+              answer: "bottle",
+              placeholder: "Type your answer..."
+            },
+            {
+              question: "If you feed me I live, but if you give me a drink I die. What am I?",
+              type: "text",
+              answer: "fire",
+              placeholder: "Type your answer..."
+            },
+            {
+              question: "What can you catch but not throw?",
+              type: "text",
+              answer: "cold",
+              placeholder: "Type your answer..."
             }
           ],
           intermediate: [
@@ -1334,6 +1367,36 @@
               type: "text",
               answer: "myself",
               placeholder: "Hint: Who is typing this?"
+            },
+            {
+              question: "What key opens no door, but fills a stomach on Thanksgiving?",
+              type: "text",
+              answer: "turkey",
+              placeholder: "Type your answer..."
+            },
+            {
+              question: "I have cities, but no houses. I have mountains, but no trees. I have water, but no fish. What am I?",
+              type: "text",
+              answer: "map",
+              placeholder: "Type your answer..."
+            },
+            {
+              question: "What building has the most stories?",
+              type: "text",
+              answer: "library",
+              placeholder: "Type your answer..."
+            },
+            {
+              question: "What runs all around a backyard, yet never moves?",
+              type: "text",
+              answer: "fence",
+              placeholder: "Type your answer..."
+            },
+            {
+              question: "I am always hungry and must be fed, but if you touch me with water I will die. What am I?",
+              type: "text",
+              answer: "fire",
+              placeholder: "Type your answer..."
             }
           ],
           senior: [
@@ -1395,6 +1458,36 @@
               question: "What is always in front of you but cannot be seen?",
               type: "text",
               answer: "future",
+              placeholder: "Type your answer..."
+            },
+            {
+              question: "If you look at the number on my face, you won't find thirteen. What am I?",
+              type: "text",
+              answer: "clock",
+              placeholder: "Type your answer..."
+            },
+            {
+              question: "The person who makes it has no need of it; the person who buys it does not use it. The person who uses it does not know it. What is it?",
+              type: "text",
+              answer: "coffin",
+              placeholder: "Type your answer..."
+            },
+            {
+              question: "What is 3/7 chicken, 2/3 cat, and 2/4 goat?",
+              type: "mcq",
+              options: ["Chicago", "Catastrophe", "Chicken Soup", "Animal Farm"],
+              answer: "Chicago"
+            },
+            {
+              question: "What begins with T, finishes with T, and has T in it?",
+              type: "text",
+              answer: "teapot",
+              placeholder: "Type your answer..."
+            },
+            {
+              question: "What is so fragile that saying its name breaks it?",
+              type: "text",
+              answer: "silence",
               placeholder: "Type your answer..."
             }
           ]
@@ -1465,6 +1558,36 @@
               type: "mcq",
               options: ["New York City", "Los Angeles", "Paris", "London"],
               answer: "New York City"
+            },
+            {
+              question: "Which country is home to the Eiffel Tower?",
+              type: "text",
+              answer: "France",
+              placeholder: "Type country..."
+            },
+            {
+              question: "Which country is famous for the ancient Pyramids?",
+              type: "text",
+              answer: "Egypt",
+              placeholder: "Type country..."
+            },
+            {
+              question: "What is the capital city of France?",
+              type: "text",
+              answer: "Paris",
+              placeholder: "Type capital..."
+            },
+            {
+              question: "In which country is the famous Great Wall located?",
+              type: "text",
+              answer: "China",
+              placeholder: "Type country..."
+            },
+            {
+              question: "What is the capital city of China?",
+              type: "text",
+              answer: "Beijing",
+              placeholder: "Type capital..."
             }
           ],
           intermediate: [
@@ -1527,6 +1650,36 @@
               type: "text",
               answer: "Greenland",
               placeholder: "Type the island name..."
+            },
+            {
+              question: "What is the capital city of Germany?",
+              type: "text",
+              answer: "Berlin",
+              placeholder: "Type capital..."
+            },
+            {
+              question: "Which European country is famous for its tulips, clogs, and windmills?",
+              type: "text",
+              answer: "Netherlands",
+              placeholder: "Type country..."
+            },
+            {
+              question: "What is the capital city of Italy?",
+              type: "text",
+              answer: "Rome",
+              placeholder: "Type capital..."
+            },
+            {
+              question: "Which body of water is the saltiest sea in the world?",
+              type: "mcq",
+              options: ["Red Sea", "Mediterranean Sea", "Dead Sea", "Caribbean Sea"],
+              answer: "Dead Sea"
+            },
+            {
+              question: "Which human-made canal connects the Atlantic and Pacific oceans?",
+              type: "text",
+              answer: "Panama Canal",
+              placeholder: "Type canal name..."
             }
           ],
           senior: [
@@ -1588,6 +1741,36 @@
               question: "What is the capital city of Canada?",
               type: "text",
               answer: "Ottawa",
+              placeholder: "Type capital..."
+            },
+            {
+              question: "What is the capital city of Turkey?",
+              type: "text",
+              answer: "Ankara",
+              placeholder: "Type capital..."
+            },
+            {
+              question: "Which country is the largest landlocked nation in the world?",
+              type: "text",
+              answer: "Kazakhstan",
+              placeholder: "Type country..."
+            },
+            {
+              question: "In which Middle Eastern country is the ancient city of Petra located?",
+              type: "text",
+              answer: "Jordan",
+              placeholder: "Type country..."
+            },
+            {
+              question: "Which mountain range is the longest above-water range in the world?",
+              type: "text",
+              answer: "Andes",
+              placeholder: "Type mountain range..."
+            },
+            {
+              question: "What is the capital city of Brazil?",
+              type: "text",
+              answer: "Brasilia",
               placeholder: "Type capital..."
             }
           ]
@@ -1658,6 +1841,36 @@
               type: "text",
               answer: "venus",
               placeholder: "Type planet name..."
+            },
+            {
+              question: "Which planet is famous for its beautiful rings?",
+              type: "text",
+              answer: "saturn",
+              placeholder: "Type planet..."
+            },
+            {
+              question: "What is the closest star to the Earth?",
+              type: "text",
+              answer: "sun",
+              placeholder: "Type star name..."
+            },
+            {
+              question: "How many planets are there in our solar system?",
+              type: "text",
+              answer: "8",
+              placeholder: "Type number..."
+            },
+            {
+              question: "What is the name of the natural satellite that orbits the Earth?",
+              type: "text",
+              answer: "moon",
+              placeholder: "Type satellite name..."
+            },
+            {
+              question: "What animal is widely known as the King of the Jungle?",
+              type: "text",
+              answer: "lion",
+              placeholder: "Type animal..."
             }
           ],
           intermediate: [
@@ -1720,6 +1933,36 @@
               type: "text",
               answer: "H2O",
               placeholder: "Type the formula..."
+            },
+            {
+              question: "Which planet in our solar system currently has the most confirmed moons?",
+              type: "text",
+              answer: "saturn",
+              placeholder: "Type planet name..."
+            },
+            {
+              question: "What is the most abundant chemical element in the universe?",
+              type: "text",
+              answer: "hydrogen",
+              placeholder: "Type element name..."
+            },
+            {
+              question: "Which planet in our solar system is known as the morning star or evening star?",
+              type: "text",
+              answer: "venus",
+              placeholder: "Type planet name..."
+            },
+            {
+              question: "What gas do plants absorb from the air during photosynthesis?",
+              type: "text",
+              answer: "carbon dioxide",
+              placeholder: "Type gas name..."
+            },
+            {
+              question: "What was the name of the first human spaceflight mission to successfully land on the Moon?",
+              type: "text",
+              answer: "apollo 11",
+              placeholder: "Type mission name..."
             }
           ],
           senior: [
@@ -1782,6 +2025,36 @@
               type: "text",
               answer: "electron",
               placeholder: "Type particle name..."
+            },
+            {
+              question: "What is the approximate age of the universe in billions of years?",
+              type: "mcq",
+              options: ["4.5 billion", "13.8 billion", "20 billion", "8.2 billion"],
+              answer: "13.8 billion"
+            },
+            {
+              question: "Which scientist proposed the three fundamental laws of motion?",
+              type: "text",
+              answer: "isaac newton",
+              placeholder: "Type scientist name..."
+            },
+            {
+              question: "What is the astronomical term for a star that suddenly increases in brightness due to a catastrophic explosion?",
+              type: "text",
+              answer: "supernova",
+              placeholder: "Type term..."
+            },
+            {
+              question: "What is the chemical symbol for the element Sodium?",
+              type: "text",
+              answer: "Na",
+              placeholder: "Type symbol..."
+            },
+            {
+              question: "What type of galaxy structure classification is the Milky Way?",
+              type: "text",
+              answer: "spiral",
+              placeholder: "Type galaxy type..."
             }
           ]
         }
@@ -2022,9 +2295,9 @@
       const diffLabel = difficulty.charAt(0).toUpperCase() + difficulty.slice(1);
       document.getElementById('category-label').innerText = `${selectedCategory.title} (${diffLabel})`;
       
-      // Load selected category questions + SHUFFLE them so they never repeat in same order!
+      // Select 10 random questions out of 15 questions to avoid repeats!
       const rawQuestions = selectedCategory.questions[difficulty];
-      gameState.questions = shuffleArray(rawQuestions);
+      gameState.questions = shuffleArray(rawQuestions).slice(0, 10);
       
       gameState.currentQuestionIndex = 0;
       gameState.score = 0;
