@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Logic Thinking & World Quiz Quest</title>
-  <!-- Modern playful typography -->
+  <!-- Playful typography -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
@@ -33,7 +33,7 @@
       --transition-smooth: all 0.25s ease;
     }
 
-    /* Category-specific theme variables applied dynamically via JS */
+    /* Category-specific theme variables */
     .theme-logic {
       --bg-gradient-start: hsl(255, 80%, 60%);
       --bg-gradient-end: hsl(280, 85%, 55%);
@@ -74,7 +74,7 @@
       transition: background 0.8s ease;
     }
 
-    /* Floating background shapes for a playful, alive feeling */
+    /* Floating background shapes */
     .bg-shape {
       position: absolute;
       border-radius: 50%;
@@ -95,7 +95,7 @@
     }
 
     /* ==========================================================================
-       3. LAYOUT & CARD CONTAINER (Claymorphism & Glassmorphism)
+       3. LAYOUT & CARD CONTAINER
        ========================================================================== */
     #confetti-canvas {
       position: fixed;
@@ -113,6 +113,7 @@
       z-index: 2;
       position: relative;
       perspective: 1000px;
+      margin: 2rem 0;
     }
 
     .game-card {
@@ -127,12 +128,12 @@
       position: relative;
       overflow: hidden;
       transition: var(--transition-bounce), border-color 0.3s ease;
-      min-height: 480px;
+      min-height: 520px;
       display: flex;
       flex-direction: column;
     }
 
-    /* Active Card States */
+    /* Card Animations */
     .game-card.correct-flash {
       background: hsl(142, 85%, 97%);
       border-color: hsl(142, 70%, 80%);
@@ -157,7 +158,7 @@
       30%, 60%, 90% { transform: translateX(12px); }
     }
 
-    /* Screen management */
+    /* Screen display */
     .screen {
       display: none;
       flex-direction: column;
@@ -175,7 +176,169 @@
     }
 
     /* ==========================================================================
-       4. TYPOGRAPHY & HEADINGS
+       4. PRELOADER SCREEN
+       ========================================================================== */
+    .preloader-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      gap: 1.5rem;
+      flex-grow: 1;
+    }
+
+    .loader-icon {
+      font-size: 5rem;
+      animation: bouncePulse 2s infinite ease-in-out;
+      display: inline-block;
+    }
+
+    @keyframes bouncePulse {
+      0%, 100% { transform: scale(1) translateY(0); }
+      50% { transform: scale(1.15) translateY(-15px); }
+    }
+
+    .loading-number {
+      font-family: var(--font-display);
+      font-size: 3.5rem;
+      font-weight: 800;
+      color: var(--card-accent);
+      line-height: 1;
+    }
+
+    .loader-bar-outer {
+      width: 80%;
+      height: 14px;
+      background: hsl(220, 20%, 90%);
+      border-radius: 50px;
+      overflow: hidden;
+      border: 3px solid white;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .loader-bar-inner {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--card-accent), var(--accent-color));
+      border-radius: 50px;
+      transition: width 0.1s linear;
+    }
+
+    .loader-status {
+      font-weight: 700;
+      color: var(--text-muted);
+      font-size: 1.1rem;
+      min-height: 1.5rem;
+    }
+
+    /* ==========================================================================
+       5. JUKEBOX / MUSIC CONTROLLER (Floating Retro Panel)
+       ========================================================================== */
+    .jukebox-widget {
+      position: absolute;
+      top: 1.5rem;
+      right: 1.5rem;
+      background: white;
+      border: 3px solid hsl(220, 20%, 88%);
+      border-radius: 16px;
+      padding: 0.6rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.06);
+      z-index: 8;
+      transition: var(--transition-bounce);
+    }
+
+    .jukebox-widget:hover {
+      transform: translateY(-2px);
+      border-color: var(--card-accent);
+    }
+
+    .jukebox-display {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .jukebox-title {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .jukebox-song {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 0.9rem;
+      color: var(--card-accent);
+      width: 140px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .jukebox-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .juke-btn {
+      background: hsl(220, 20%, 95%);
+      border: none;
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: var(--transition-bounce);
+      outline: none;
+      color: var(--text-main);
+    }
+
+    .juke-btn:hover {
+      background: var(--card-accent);
+      color: white;
+      transform: scale(1.1);
+    }
+
+    .juke-btn:active {
+      transform: scale(0.9);
+    }
+
+    .volume-slider-container {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      border-left: 2px solid hsl(220, 20%, 90%);
+      padding-left: 0.6rem;
+    }
+
+    .volume-icon {
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    .volume-slider {
+      width: 60px;
+      height: 6px;
+      accent-color: var(--card-accent);
+      cursor: pointer;
+    }
+
+    /* Screen Adjustments to clear Jukebox on desktop */
+    #screen-welcome {
+      margin-top: 1rem;
+    }
+
+    /* ==========================================================================
+       6. TYPOGRAPHY & ELEMENTS
        ========================================================================== */
     h1, h2, h3 {
       font-family: var(--font-display);
@@ -187,7 +350,7 @@
     h1 {
       font-size: 2.2rem;
       color: var(--card-accent);
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.3rem;
       text-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     }
 
@@ -195,38 +358,33 @@
       text-align: center;
       font-size: 1.1rem;
       color: var(--text-muted);
-      margin-bottom: 2rem;
+      margin-bottom: 1.8rem;
       font-weight: 500;
     }
 
-    /* ==========================================================================
-       5. COMPONENTS
-       ========================================================================== */
-    
-    /* Playful Inputs */
     .form-group {
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.2rem;
       display: flex;
       flex-direction: column;
-      gap: 0.6rem;
+      gap: 0.5rem;
     }
 
     label {
       font-family: var(--font-display);
       font-weight: 600;
-      font-size: 1.1rem;
+      font-size: 1.05rem;
       color: var(--text-main);
-      padding-left: 0.5rem;
+      padding-left: 0.4rem;
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.4rem;
     }
 
     input[type="text"], select {
       font-family: var(--font-playful);
       font-size: 1.1rem;
       font-weight: 700;
-      padding: 1rem 1.2rem;
+      padding: 0.9rem 1.2rem;
       border-radius: 18px;
       border: 3px solid hsl(220, 20%, 88%);
       background: white;
@@ -241,7 +399,6 @@
       box-shadow: 0 0 0 4px rgba(110, 84, 255, 0.15);
     }
 
-    /* Interactive Buttons */
     .btn {
       font-family: var(--font-display);
       font-weight: 800;
@@ -284,12 +441,12 @@
       transform: none;
     }
 
-    /* Category Cards grid */
+    /* Category selection */
     .categories-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 1rem;
-      margin-bottom: 2rem;
+      gap: 0.8rem;
+      margin-bottom: 1.5rem;
     }
 
     @media (max-width: 560px) {
@@ -302,32 +459,31 @@
       background: white;
       border: 4px solid hsl(220, 20%, 92%);
       border-radius: 20px;
-      padding: 1rem;
+      padding: 0.8rem;
       text-align: center;
       cursor: pointer;
       transition: var(--transition-bounce);
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.4rem;
     }
 
     .category-card:hover {
-      transform: translateY(-6px);
+      transform: translateY(-5px);
       border-color: var(--card-accent);
-      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.05);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
     }
 
     .category-card.selected {
       background: hsl(255, 80%, 98%);
       border-color: var(--card-accent);
       border-width: 4px;
-      box-shadow: 0 12px 24px rgba(110, 84, 255, 0.15);
+      box-shadow: 0 10px 20px rgba(110, 84, 255, 0.15);
     }
 
     .category-icon {
-      font-size: 2.5rem;
-      margin-bottom: 0.2rem;
+      font-size: 2.3rem;
       display: inline-block;
       transition: var(--transition-bounce);
     }
@@ -339,22 +495,25 @@
     .category-title {
       font-family: var(--font-display);
       font-weight: 800;
-      font-size: 1rem;
+      font-size: 0.95rem;
       color: var(--text-main);
     }
 
     .category-desc {
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       color: var(--text-muted);
       font-weight: 500;
     }
 
-    /* Scoreboard & Progress (Quiz Screen) */
+    /* ==========================================================================
+       7. QUIZ INTERACTION
+       ========================================================================== */
     .quiz-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.2rem;
+      margin-top: 1rem; /* Clear Jukebox */
       background: hsl(220, 20%, 97%);
       padding: 0.8rem 1.2rem;
       border-radius: 18px;
@@ -393,7 +552,7 @@
     }
 
     .progress-section {
-      margin-bottom: 2rem;
+      margin-bottom: 1.8rem;
     }
 
     .progress-text {
@@ -423,7 +582,6 @@
       position: relative;
     }
 
-    /* Candy stripe effect on progress bar */
     .progress-bar::after {
       content: '';
       position: absolute;
@@ -447,7 +605,6 @@
       100% { background-position: 30px 0; }
     }
 
-    /* Active Question & Input area */
     .question-card-inner {
       flex-grow: 1;
       display: flex;
@@ -455,32 +612,32 @@
       justify-content: center;
       align-items: center;
       text-align: center;
-      gap: 1.5rem;
+      gap: 1.2rem;
       margin-bottom: 1.5rem;
     }
 
     .question-prompt {
       font-family: var(--font-display);
       font-weight: 800;
-      font-size: 1.5rem;
+      font-size: 1.45rem;
       color: var(--text-main);
       line-height: 1.35;
       max-width: 100%;
-      margin: 0.5rem 0;
+      margin: 0.4rem 0;
+      white-space: pre-line; /* Support line breaks in patterns */
     }
 
     .answers-container {
       width: 100%;
       display: flex;
       flex-direction: column;
-      gap: 1rem;
+      gap: 0.8rem;
     }
 
-    /* Grid for multiple choice */
     .mcq-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 1rem;
+      gap: 0.8rem;
       width: 100%;
     }
 
@@ -494,17 +651,17 @@
       background: white;
       border: 3px solid hsl(220, 20%, 90%);
       border-radius: 18px;
-      padding: 1.1rem 1.2rem;
+      padding: 1rem 1.1rem;
       font-family: var(--font-playful);
       font-weight: 700;
-      font-size: 1rem;
+      font-size: 0.95rem;
       color: var(--text-main);
       cursor: pointer;
       text-align: left;
       transition: var(--transition-bounce);
       display: flex;
       align-items: center;
-      gap: 0.8rem;
+      gap: 0.6rem;
       outline: none;
     }
 
@@ -522,15 +679,15 @@
     .mcq-bullet {
       background: hsl(220, 20%, 92%);
       color: var(--text-muted);
-      width: 28px;
-      height: 28px;
+      width: 26px;
+      height: 26px;
       border-radius: 50%;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       font-family: var(--font-display);
       font-weight: 800;
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       flex-shrink: 0;
       transition: var(--transition-smooth);
     }
@@ -540,15 +697,14 @@
       color: white;
     }
 
-    /* Text Input Area */
     .text-input-wrapper {
       width: 100%;
       display: flex;
       flex-direction: column;
-      gap: 1.2rem;
+      gap: 1rem;
     }
 
-    /* Feedback Overlay */
+    /* Feedback Banner Overlay */
     .feedback-overlay {
       position: absolute;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -582,7 +738,7 @@
 
     .feedback-emoji {
       font-size: 4.5rem;
-      margin-bottom: 1rem;
+      margin-bottom: 0.8rem;
       animation: emojiPop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
     }
 
@@ -639,46 +795,49 @@
     }
 
     /* ==========================================================================
-       6. GAME OVER SCREEN
+       8. GAME OVER SCREEN (10 STARS)
        ========================================================================== */
     .gameover-summary {
       text-align: center;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 1.5rem;
-      margin: 1.5rem 0;
+      gap: 1.2rem;
+      margin: 1rem 0;
     }
 
     .stars-container {
-      display: flex;
-      gap: 0.5rem;
+      display: grid;
+      grid-template-columns: repeat(10, 1fr);
+      gap: 0.2rem;
       justify-content: center;
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.2rem;
+      width: 80%;
+      max-width: 320px;
     }
 
     .star {
-      font-size: 2.8rem;
+      font-size: 1.8rem;
       color: hsl(220, 15%, 85%);
       transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      text-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     }
 
     .star.active {
       color: #FFC107;
-      transform: scale(1.1);
-      animation: starSpin 0.6s ease-out;
+      transform: scale(1.15);
+      animation: starSpin 0.5s ease-out;
     }
 
     @keyframes starSpin {
       0% { transform: scale(0) rotate(-180deg); }
       70% { transform: scale(1.2) rotate(20deg); }
-      100% { transform: scale(1.1) rotate(0); }
+      100% { transform: scale(1) rotate(0); }
     }
 
     .score-circle {
-      width: 140px;
-      height: 140px;
+      width: 130px;
+      height: 130px;
       border-radius: 50%;
       background: hsl(255, 80%, 98%);
       border: 8px solid var(--card-accent);
@@ -686,57 +845,87 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.06);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.06);
     }
 
     .score-circle .final-num {
       font-family: var(--font-display);
       font-weight: 800;
-      font-size: 3rem;
+      font-size: 2.8rem;
       color: var(--card-accent);
       line-height: 1;
     }
 
     .score-circle .final-max {
-      font-size: 1rem;
+      font-size: 0.9rem;
       color: var(--text-muted);
       font-weight: 700;
       border-top: 2px solid hsl(220, 20%, 90%);
       margin-top: 2px;
       padding-top: 2px;
-      width: 60px;
+      width: 50px;
     }
 
     .congrats-title {
-      font-size: 1.8rem;
+      font-size: 1.7rem;
       color: var(--text-main);
     }
 
     .congrats-desc {
-      font-size: 1.1rem;
+      font-size: 1.05rem;
       color: var(--text-muted);
-      max-width: 85%;
+      max-width: 90%;
       line-height: 1.4;
     }
   </style>
 </head>
 <body>
 
-  <!-- Background Animated Shapes -->
+  <!-- Floating Shapes -->
   <div class="bg-shape"></div>
   <div class="bg-shape"></div>
   <div class="bg-shape"></div>
 
-  <!-- Confetti Canvas -->
+  <!-- Emitters Canvas -->
   <canvas id="confetti-canvas"></canvas>
+
+  <!-- Jukebox Music Controller Panel -->
+  <div class="jukebox-widget" id="jukebox-box" style="display: none;">
+    <div class="jukebox-display">
+      <span class="jukebox-title">Jukebox 📻</span>
+      <span class="jukebox-song" id="juke-song-title">Music: Off</span>
+    </div>
+    <div class="jukebox-controls">
+      <button class="juke-btn" id="btn-juke-play" title="Play/Pause">▶</button>
+      <button class="juke-btn" id="btn-juke-next" title="Next Song">⏭</button>
+    </div>
+    <div class="volume-slider-container">
+      <span class="volume-icon" id="juke-vol-icon">🔊</span>
+      <input type="range" class="volume-slider" id="juke-vol-slider" min="0" max="1" step="0.05" value="0.5">
+    </div>
+  </div>
 
   <main>
     <div class="game-card" id="main-card">
       
-      <!-- 1. WELCOME SCREEN -->
-      <section class="screen active" id="screen-welcome">
-        <h1>Logic Thinking</h1>
-        <p class="subtitle">World Quiz & Puzzle Quest</p>
+      <!-- 1. LOADING SCREEN -->
+      <section class="screen active" id="screen-loader">
+        <div class="preloader-wrapper">
+          <span class="loader-icon">💡</span>
+          <h2>Logic Thinking</h2>
+          <p class="subtitle" style="margin-bottom: 0.5rem;">Loading Game Resources...</p>
+          <div class="loading-number" id="load-percent">0%</div>
+          <div class="loader-bar-outer">
+            <div class="loader-bar-inner" id="load-bar"></div>
+          </div>
+          <p class="loader-status" id="load-status">Connecting nodes...</p>
+        </div>
+      </section>
+      
+      <!-- 2. WELCOME / PROFILE SETUP -->
+      <section class="screen" id="screen-welcome">
+        <h1>Welcome Player! 🎉</h1>
+        <p class="subtitle">Enter your details and select a quest below</p>
         
         <div class="form-group">
           <label for="player-name">
@@ -745,7 +934,7 @@
           <input type="text" id="player-name" placeholder="Type your name here..." autocomplete="off">
         </div>
 
-        <div class="form-group" style="margin-bottom: 2rem;">
+        <div class="form-group" style="margin-bottom: 1.5rem;">
           <label for="player-age">
             <span class="label-icon">🎂</span> How old are you?
           </label>
@@ -766,17 +955,17 @@
             <div class="category-card selected" data-category="logic">
               <span class="category-icon">🧠</span>
               <span class="category-title">Logic Wonders</span>
-              <span class="category-desc">Puzzles & Riddles</span>
+              <span class="category-desc">Riddles & Logic</span>
             </div>
             <div class="category-card" data-category="world">
               <span class="category-icon">🌍</span>
               <span class="category-title">World Explorer</span>
-              <span class="category-desc">Geography Facts</span>
+              <span class="category-desc">Global Trivia</span>
             </div>
             <div class="category-card" data-category="space">
               <span class="category-icon">🚀</span>
               <span class="category-title">Space & Science</span>
-              <span class="category-desc">Cosmic Discoveries</span>
+              <span class="category-desc">Cosmic Puzzles</span>
             </div>
           </div>
         </div>
@@ -786,7 +975,7 @@
         </button>
       </section>
 
-      <!-- 2. GAME SCREEN -->
+      <!-- 3. ACTIVE GAMEPLAY -->
       <section class="screen" id="screen-game">
         <div class="quiz-header">
           <div class="profile-info">
@@ -798,7 +987,7 @@
 
         <div class="progress-section">
           <div class="progress-text">
-            <span id="question-index-label">Question 1 of 5</span>
+            <span id="question-index-label">Question 1 of 10</span>
             <span id="category-label">Category</span>
           </div>
           <div class="progress-bar-container">
@@ -807,13 +996,13 @@
         </div>
 
         <div class="question-card-inner">
-          <p class="question-prompt" id="question-text">Loading puzzle...</p>
+          <p class="question-prompt" id="question-text">Loading...</p>
           <div class="answers-container" id="answers-area">
-            <!-- Populated dynamically via JS -->
+            <!-- Rendered dynamically -->
           </div>
         </div>
 
-        <!-- Correct/Incorrect Feedback Overlay -->
+        <!-- Success/Failure Overlay -->
         <div class="feedback-overlay" id="feedback-overlay">
           <div class="feedback-emoji" id="feedback-emoji">🎉</div>
           <div class="feedback-title" id="feedback-title">Correct!</div>
@@ -824,13 +1013,18 @@
         </div>
       </section>
 
-      <!-- 3. GAME OVER SCREEN -->
+      <!-- 4. GAME OVER SUMMARY -->
       <section class="screen" id="screen-gameover">
-        <h1>Quest Completed!</h1>
-        <p class="subtitle">Congratulations on finishing your journey!</p>
+        <h1>Quest Completed! 🏆</h1>
+        <p class="subtitle">Your score summary and final rating</p>
 
         <div class="gameover-summary">
           <div class="stars-container" id="stars-row">
+            <span class="star">★</span>
+            <span class="star">★</span>
+            <span class="star">★</span>
+            <span class="star">★</span>
+            <span class="star">★</span>
             <span class="star">★</span>
             <span class="star">★</span>
             <span class="star">★</span>
@@ -840,11 +1034,11 @@
 
           <div class="score-circle">
             <span class="final-num" id="final-score">0</span>
-            <span class="final-max">out of 5</span>
+            <span class="final-max">out of 10</span>
           </div>
 
-          <h2 class="congrats-title" id="gameover-title">Awesome Job, Player!</h2>
-          <p class="congrats-desc" id="gameover-desc">You showed stellar thinking today.</p>
+          <h2 class="congrats-title" id="gameover-title">Awesome!</h2>
+          <p class="congrats-desc" id="gameover-desc">Stellar thinking today.</p>
         </div>
 
         <button class="btn btn-primary" id="btn-replay" style="margin-top: auto;">
@@ -857,133 +1051,253 @@
 
   <script>
     /* ==========================================================================
-       A. SOUND SYNTHESIZER (WEB AUDIO API)
+       A. PLAYFUL CHIPTUNE SEQUENCER (WEB AUDIO API)
        ========================================================================== */
-    class AudioController {
+    class Jukebox {
       constructor() {
         this.ctx = null;
+        this.gainNode = null;
+        this.isPlaying = false;
+        this.currentTrackIndex = 0;
+        this.volume = 0.3; // Default soft
+        this.timer = null;
+        this.noteIndex = 0;
+        
+        // Playlist definitions
+        this.tracks = [
+          {
+            name: "⚔️ Demon Slayer Hook",
+            tempo: 160,
+            notes: [
+              { f: 329.63, d: 2 }, { f: 392.00, d: 2 }, { f: 440.00, d: 2 }, { f: 493.88, d: 4 },
+              { f: 493.88, d: 2 }, { f: 440.00, d: 2 }, { f: 392.00, d: 2 }, { f: 440.00, d: 2 },
+              { f: 493.88, d: 2 }, { f: 440.00, d: 4 }, { f: 0, d: 2 },
+              { f: 493.88, d: 2 }, { f: 587.33, d: 2 }, { f: 659.25, d: 4 }, { f: 587.33, d: 2 },
+              { f: 493.88, d: 2 }, { f: 440.00, d: 2 }, { f: 392.00, d: 2 }, { f: 329.63, d: 6 }
+            ]
+          },
+          {
+            name: "❄️ Lovely (Billie Eilish)",
+            tempo: 100,
+            notes: [
+              { f: 659.25, d: 4 }, { f: 739.99, d: 4 }, { f: 587.33, d: 4 }, { f: 554.37, d: 4 },
+              { f: 493.88, d: 4 }, { f: 554.37, d: 4 }, { f: 587.33, d: 4 }, { f: 493.88, d: 8 },
+              { f: 0, d: 2 },
+              { f: 659.25, d: 4 }, { f: 739.99, d: 4 }, { f: 587.33, d: 4 }, { f: 554.37, d: 4 },
+              { f: 493.88, d: 4 }, { f: 554.37, d: 4 }, { f: 587.33, d: 4 }, { f: 493.88, d: 8 }
+            ]
+          },
+          {
+            name: "✨ Ya Man Sollaita",
+            tempo: 90,
+            notes: [
+              { f: 440.00, d: 4 }, { f: 493.88, d: 4 }, { f: 523.25, d: 4 }, { f: 493.88, d: 4 },
+              { f: 440.00, d: 4 }, { f: 392.00, d: 4 }, { f: 440.00, d: 8 },
+              { f: 523.25, d: 4 }, { f: 587.33, d: 4 }, { f: 659.25, d: 4 }, { f: 587.33, d: 4 },
+              { f: 523.25, d: 4 }, { f: 493.88, d: 4 }, { f: 440.00, d: 8 }
+            ]
+          },
+          {
+            name: "🎵 K-Pop Bounce",
+            tempo: 135,
+            notes: [
+              { f: 261.63, d: 2 }, { f: 329.63, d: 2 }, { f: 392.00, d: 2 }, { f: 523.25, d: 2 },
+              { f: 392.00, d: 2 }, { f: 329.63, d: 2 }, { f: 261.63, d: 2 }, { f: 293.66, d: 2 },
+              { f: 349.23, d: 2 }, { f: 440.00, d: 2 }, { f: 587.33, d: 2 }, { f: 440.00, d: 2 },
+              { f: 349.23, d: 2 }, { f: 293.66, d: 2 }, { f: 329.63, d: 2 }, { f: 392.00, d: 2 }
+            ]
+          },
+          {
+            name: "👾 Retro Arcade Quest",
+            tempo: 150,
+            notes: [
+              { f: 659.25, d: 2 }, { f: 659.25, d: 2 }, { f: 0, d: 2 }, { f: 659.25, d: 2 },
+              { f: 0, d: 2 }, { f: 523.25, d: 2 }, { f: 659.25, d: 2 }, { f: 0, d: 2 },
+              { f: 783.99, d: 4 }, { f: 0, d: 4 }, { f: 392.00, d: 4 }, { f: 0, d: 4 }
+            ]
+          },
+          {
+            name: "☕ Study Lo-Fi Chill",
+            tempo: 80,
+            notes: [
+              { f: 261.63, d: 8 }, { f: 329.63, d: 8 }, { f: 392.00, d: 8 }, { f: 493.88, d: 8 },
+              { f: 349.23, d: 8 }, { f: 440.00, d: 8 }, { f: 523.25, d: 8 }, { f: 659.25, d: 8 }
+            ]
+          }
+        ];
       }
 
       init() {
         if (!this.ctx) {
           this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+          this.gainNode = this.ctx.createGain();
+          this.gainNode.gain.setValueAtTime(this.volume, this.ctx.currentTime);
+          this.gainNode.connect(this.ctx.destination);
         }
         if (this.ctx.state === 'suspended') {
           this.ctx.resume();
         }
       }
 
-      playPop() {
+      play() {
+        this.init();
+        if (this.isPlaying) return;
+        this.isPlaying = true;
+        this.noteIndex = 0;
+        this.scheduleNextNote();
+        document.getElementById('btn-juke-play').innerText = "⏸";
+        document.getElementById('juke-song-title').innerText = this.tracks[this.currentTrackIndex].name;
+      }
+
+      pause() {
+        this.isPlaying = false;
+        if (this.timer) clearTimeout(this.timer);
+        document.getElementById('btn-juke-play').innerText = "▶";
+        document.getElementById('juke-song-title').innerText = "Music: Paused";
+      }
+
+      toggle() {
+        if (this.isPlaying) {
+          this.pause();
+        } else {
+          this.play();
+        }
+      }
+
+      next() {
+        this.pause();
+        this.currentTrackIndex = (this.currentTrackIndex + 1) % this.tracks.length;
+        this.play();
+      }
+
+      setVolume(val) {
+        this.volume = val;
+        if (this.gainNode) {
+          this.gainNode.gain.setValueAtTime(val, this.ctx.currentTime);
+        }
+      }
+
+      scheduleNextNote() {
+        if (!this.isPlaying) return;
+
+        const track = this.tracks[this.currentTrackIndex];
+        const note = track.notes[this.noteIndex];
+        
+        // Duration calculations
+        const stepDuration = 60 / track.tempo / 4; // Length of a sixteenth note
+        const noteDuration = note.d * stepDuration;
+
+        if (note.f > 0) {
+          this.playTone(note.f, noteDuration);
+        }
+
+        this.noteIndex = (this.noteIndex + 1) % track.notes.length;
+        this.timer = setTimeout(() => {
+          this.scheduleNextNote();
+        }, noteDuration * 1000);
+      }
+
+      playTone(freq, duration) {
+        const osc = this.ctx.createOscillator();
+        const noteGain = this.ctx.createGain();
+
+        osc.connect(noteGain);
+        noteGain.connect(this.gainNode);
+
+        // Soft, retro keyboard/chime wave
+        osc.type = (this.currentTrackIndex === 4) ? 'square' : 'triangle';
+        osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+
+        // Envelope
+        noteGain.gain.setValueAtTime(0, this.ctx.currentTime);
+        noteGain.gain.linearRampToValueAtTime(0.25, this.ctx.currentTime + 0.01);
+        noteGain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + duration - 0.02);
+
+        osc.start();
+        osc.stop(this.ctx.currentTime + duration);
+      }
+
+      /* Game Sound Effects (Synthesized instantly) */
+      playClickSFX() {
         try {
           this.init();
           const osc = this.ctx.createOscillator();
-          const gain = this.ctx.createGain();
-          osc.connect(gain);
-          gain.connect(this.ctx.destination);
-          
-          osc.type = 'sine';
-          osc.frequency.setValueAtTime(350, this.ctx.currentTime);
-          osc.frequency.exponentialRampToValueAtTime(700, this.ctx.currentTime + 0.08);
-          
-          gain.gain.setValueAtTime(0.12, this.ctx.currentTime);
-          gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.08);
-          
+          const g = this.ctx.createGain();
+          osc.connect(g);
+          g.connect(this.ctx.destination);
+          osc.frequency.setValueAtTime(400, this.ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(800, this.ctx.currentTime + 0.08);
+          g.gain.setValueAtTime(0.1, this.ctx.currentTime);
+          g.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.08);
           osc.start();
           osc.stop(this.ctx.currentTime + 0.08);
-        } catch (e) {
-          console.warn("Audio synthesis failed:", e);
-        }
+        } catch(e){}
       }
 
-      playCorrect() {
+      playCorrectSFX() {
         try {
           this.init();
           const now = this.ctx.currentTime;
-          // Upbeat major chord arpeggio: C5 (523Hz), E5 (659Hz), G5 (784Hz), C6 (1046Hz)
           const notes = [523.25, 659.25, 783.99, 1046.50];
-          notes.forEach((freq, index) => {
+          notes.forEach((freq, idx) => {
             const osc = this.ctx.createOscillator();
-            const gain = this.ctx.createGain();
-            osc.connect(gain);
-            gain.connect(this.ctx.destination);
-            
+            const g = this.ctx.createGain();
+            osc.connect(g);
+            g.connect(this.ctx.destination);
             osc.type = 'triangle';
-            osc.frequency.setValueAtTime(freq, now + index * 0.07);
-            
-            gain.gain.setValueAtTime(0, now + index * 0.07);
-            gain.gain.linearRampToValueAtTime(0.15, now + index * 0.07 + 0.02);
-            gain.gain.exponentialRampToValueAtTime(0.01, now + index * 0.07 + 0.18);
-            
-            osc.start(now + index * 0.07);
-            osc.stop(now + index * 0.07 + 0.22);
+            osc.frequency.setValueAtTime(freq, now + idx * 0.07);
+            g.gain.setValueAtTime(0, now + idx * 0.07);
+            g.gain.linearRampToValueAtTime(0.12, now + idx * 0.07 + 0.02);
+            g.gain.exponentialRampToValueAtTime(0.01, now + idx * 0.07 + 0.15);
+            osc.start(now + idx * 0.07);
+            osc.stop(now + idx * 0.07 + 0.2);
           });
-        } catch (e) {
-          console.warn("Audio synthesis failed:", e);
-        }
+        } catch(e){}
       }
 
-      playIncorrect() {
+      playIncorrectSFX() {
         try {
           this.init();
           const now = this.ctx.currentTime;
           const osc = this.ctx.createOscillator();
-          const gain = this.ctx.createGain();
-          osc.connect(gain);
-          gain.connect(this.ctx.destination);
-          
+          const g = this.ctx.createGain();
+          osc.connect(g);
+          g.connect(this.ctx.destination);
           osc.type = 'sawtooth';
           osc.frequency.setValueAtTime(220, now);
           osc.frequency.linearRampToValueAtTime(110, now + 0.25);
-          
-          gain.gain.setValueAtTime(0.15, now);
-          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
-          
+          g.gain.setValueAtTime(0.12, now);
+          g.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
           osc.start(now);
           osc.stop(now + 0.3);
-        } catch (e) {
-          console.warn("Audio synthesis failed:", e);
-        }
+        } catch(e){}
       }
 
-      playVictory() {
+      playVictorySFX() {
         try {
           this.init();
           const now = this.ctx.currentTime;
-          const melody = [
-            { f: 523.25, d: 0.12 }, // C5
-            { f: 659.25, d: 0.12 }, // E5
-            { f: 783.99, d: 0.12 }, // G5
-            { f: 1046.50, d: 0.12 }, // C6
-            { f: 880.00, d: 0.12 }, // A5
-            { f: 1046.50, d: 0.4 }  // C6 (hold)
-          ];
-          let time = now;
-          melody.forEach((note) => {
+          const notes = [523.25, 659.25, 783.99, 1046.50, 880.00, 1046.50];
+          notes.forEach((freq, idx) => {
             const osc = this.ctx.createOscillator();
-            const gain = this.ctx.createGain();
-            osc.connect(gain);
-            gain.connect(this.ctx.destination);
-            
+            const g = this.ctx.createGain();
+            osc.connect(g);
+            g.connect(this.ctx.destination);
             osc.type = 'sine';
-            osc.frequency.setValueAtTime(note.f, time);
-            
-            gain.gain.setValueAtTime(0.12, time);
-            gain.gain.exponentialRampToValueAtTime(0.01, time + note.d);
-            
-            osc.start(time);
-            osc.stop(time + note.d + 0.05);
-            time += note.d * 0.85;
+            osc.frequency.setValueAtTime(freq, now + idx * 0.12);
+            g.gain.setValueAtTime(0.1, now + idx * 0.12);
+            g.gain.exponentialRampToValueAtTime(0.01, now + idx * 0.12 + 0.12);
+            osc.start(now + idx * 0.12);
+            osc.stop(now + idx * 0.12 + 0.15);
           });
-        } catch (e) {
-          console.warn("Audio synthesis failed:", e);
-        }
+        } catch(e){}
       }
     }
 
-    const sound = new AudioController();
+    const jukebox = new Jukebox();
 
     /* ==========================================================================
-       B. DATA STORAGE: QUESTIONS
+       B. QUESTIONS DATA (10 per category)
        ========================================================================== */
     const QUIZ_DATA = {
       logic: {
@@ -994,14 +1308,8 @@
           {
             question: "A farmer has a fox, a goose, and a bag of beans. He must cross a river in a boat that can only hold him and one item. If left alone, the fox eats the goose, or the goose eats the beans. What should he take across first?",
             type: "mcq",
-            options: [
-              "The fox",
-              "The goose",
-              "The beans",
-              "Nothing"
-            ],
-            answer: "The goose",
-            hint: "Think about which two items can't be left together!"
+            options: ["The fox", "The goose", "The beans", "Nothing"],
+            answer: "The goose"
           },
           {
             question: "What number comes next in this pattern?\n2, 4, 8, 16, 32, ...",
@@ -1012,14 +1320,8 @@
           {
             question: "Which weighs more: a pound of feathers or a pound of gold bricks?",
             type: "mcq",
-            options: [
-              "The feathers weigh more",
-              "The gold bricks weigh more",
-              "They weigh the exact same",
-              "Feathers don't weigh anything"
-            ],
-            answer: "They weigh the exact same",
-            hint: "A pound is a pound, no matter what it is!"
+            options: ["The feathers weigh more", "The gold bricks weigh more", "They weigh the exact same", "Feathers don't weigh anything"],
+            answer: "They weigh the exact same"
           },
           {
             question: "I speak without a mouth and hear without ears. I have no body, but I come alive with wind. What am I?",
@@ -1030,14 +1332,38 @@
           {
             question: "A prisoner has a choice of three escape doors. Behind Door 1 is a raging fire. Behind Door 2 is a group of assassins with loaded bows. Behind Door 3 is a lion that hasn't eaten in three years. Which door is the safest?",
             type: "mcq",
-            options: [
-              "Door 1 (Raging Fire)",
-              "Door 2 (Assassins)",
-              "Door 3 (Starved Lion)",
-              "All are equally dangerous"
-            ],
-            answer: "Door 3 (Starved Lion)",
-            hint: "How long can a lion survive without food?"
+            options: ["Door 1 (Raging Fire)", "Door 2 (Assassins)", "Door 3 (Starved Lion)", "All are equally dangerous"],
+            answer: "Door 3 (Starved Lion)"
+          },
+          {
+            question: "What has keys but can't open locks, has space but no room, and you can enter but can't go outside?",
+            type: "text",
+            answer: "keyboard",
+            placeholder: "Type your one-word answer..."
+          },
+          {
+            question: "The more of them you take, the more you leave behind. What are they?",
+            type: "mcq",
+            options: ["Footsteps", "Photos", "Seconds", "Breaths"],
+            answer: "Footsteps"
+          },
+          {
+            question: "I am full of holes but still hold water. What am I?",
+            type: "text",
+            answer: "sponge",
+            placeholder: "Type your one-word answer..."
+          },
+          {
+            question: "What can travel around the world while staying in a corner?",
+            type: "mcq",
+            options: ["A stamp", "A letter", "An airplane", "A postcard"],
+            answer: "A stamp"
+          },
+          {
+            question: "A father's child is not my brother, nor my sister, yet it is the child of my father. Who is it?",
+            type: "text",
+            answer: "myself",
+            placeholder: "Hint: Who is typing this?"
           }
         ]
       },
@@ -1049,12 +1375,7 @@
           {
             question: "Which is the tallest mountain in the world above sea level?",
             type: "mcq",
-            options: [
-              "Mount Kilimanjaro",
-              "K2",
-              "Mount Everest",
-              "Mount Fuji"
-            ],
+            options: ["Mount Kilimanjaro", "K2", "Mount Everest", "Mount Fuji"],
             answer: "Mount Everest"
           },
           {
@@ -1066,12 +1387,7 @@
           {
             question: "Which river is the longest in the world?",
             type: "mcq",
-            options: [
-              "Amazon River",
-              "Nile River",
-              "Mississippi River",
-              "Yangtze River"
-            ],
+            options: ["Amazon River", "Nile River", "Mississippi River", "Yangtze River"],
             answer: "Nile River"
           },
           {
@@ -1083,13 +1399,38 @@
           {
             question: "Which is the smallest continent in the world by land area?",
             type: "mcq",
-            options: [
-              "Europe",
-              "Australia",
-              "Antarctica",
-              "South America"
-            ],
+            options: ["Europe", "Australia", "Antarctica", "South America"],
             answer: "Australia"
+          },
+          {
+            question: "What is the name of the largest ocean on Earth?",
+            type: "text",
+            answer: "Pacific",
+            placeholder: "Type the ocean name..."
+          },
+          {
+            question: "Which country is home to the Kangaroo?",
+            type: "mcq",
+            options: ["Australia", "South Africa", "India", "Brazil"],
+            answer: "Australia"
+          },
+          {
+            question: "What is the capital city of Japan?",
+            type: "text",
+            answer: "Tokyo",
+            placeholder: "Type the capital city..."
+          },
+          {
+            question: "Which famous wall is over 13,000 miles long?",
+            type: "mcq",
+            options: ["Great Wall of China", "Berlin Wall", "Western Wall", "Roman Wall"],
+            answer: "Great Wall of China"
+          },
+          {
+            question: "What is the name of the largest hot desert in the world?",
+            type: "text",
+            answer: "Sahara",
+            placeholder: "Type the desert name..."
           }
         ]
       },
@@ -1101,12 +1442,7 @@
           {
             question: "Which planet in our solar system is known as the Red Planet?",
             type: "mcq",
-            options: [
-              "Venus",
-              "Jupiter",
-              "Mars",
-              "Saturn"
-            ],
+            options: ["Venus", "Jupiter", "Mars", "Saturn"],
             answer: "Mars"
           },
           {
@@ -1118,12 +1454,7 @@
           {
             question: "How many days does it take for Earth to complete one full orbit around the Sun?",
             type: "mcq",
-            options: [
-              "30 days",
-              "365 days",
-              "24 days",
-              "100 days"
-            ],
+            options: ["30 days", "365 days", "24 days", "100 days"],
             answer: "365 days"
           },
           {
@@ -1135,13 +1466,38 @@
           {
             question: "Which force pulls objects down toward the center of the Earth?",
             type: "mcq",
-            options: [
-              "Magnetism",
-              "Friction",
-              "Gravity",
-              "Wind Force"
-            ],
+            options: ["Magnetism", "Friction", "Gravity", "Wind Force"],
             answer: "Gravity"
+          },
+          {
+            question: "What is the center of our Solar System?",
+            type: "text",
+            answer: "sun",
+            placeholder: "Type the object name..."
+          },
+          {
+            question: "Which is the largest planet in our Solar System?",
+            type: "mcq",
+            options: ["Jupiter", "Saturn", "Earth", "Neptune"],
+            answer: "Jupiter"
+          },
+          {
+            question: "What is the name of the galaxy we live in?",
+            type: "text",
+            answer: "milky way",
+            placeholder: "Type the galaxy name..."
+          },
+          {
+            question: "What state of matter is ice?",
+            type: "mcq",
+            options: ["Solid", "Liquid", "Gas", "Plasma"],
+            answer: "Solid"
+          },
+          {
+            question: "What is the chemical formula for water?",
+            type: "text",
+            answer: "H2O",
+            placeholder: "Type the formula..."
           }
         ]
       }
@@ -1176,7 +1532,6 @@
       let particles = [];
       const colors = ['#FFC107', '#FF5722', '#E91E63', '#9C27B0', '#3F51B5', '#00BCD4', '#4CAF50', '#8BC34A'];
       
-      // Spawn particles
       for (let i = 0; i < 90; i++) {
         particles.push({
           x: canvas.width / 2,
@@ -1198,8 +1553,8 @@
         particles.forEach(p => {
           p.x += p.vx;
           p.y += p.vy;
-          p.vy += 0.45; // gravity
-          p.vx *= 0.985; // air drag
+          p.vy += 0.45;
+          p.vx *= 0.985;
           p.rotation += p.rotationSpeed;
           
           if (p.y < canvas.height + 50) {
@@ -1220,7 +1575,6 @@
       update();
     }
 
-    /* Resize canvas on window resize to ensure full window confetti coverage */
     window.addEventListener('resize', () => {
       const canvas = document.getElementById('confetti-canvas');
       canvas.width = window.innerWidth;
@@ -1228,10 +1582,97 @@
     });
 
     /* ==========================================================================
-       E. INTERACTION LOGIC
+       E. PRELOADER ENGINE
        ========================================================================== */
-    
-    // Welcome Screen Inputs Validation
+    window.addEventListener('DOMContentLoaded', () => {
+      const loadPercentText = document.getElementById('load-percent');
+      const loadBar = document.getElementById('load-bar');
+      const loadStatus = document.getElementById('load-status');
+      
+      const statuses = [
+        "Unpacking brain cells... 🧠",
+        "Loading logic nodes... 💡",
+        "Tuning synthesized song cassette... 🎵",
+        "Polishing colorful buttons... 🎨",
+        "Opening portal to quiz quest... 🚀",
+        "Ready to play! 🎉"
+      ];
+
+      let progress = 0;
+      const interval = setInterval(() => {
+        progress += Math.floor(Math.random() * 8) + 2;
+        if (progress > 100) progress = 100;
+        
+        loadPercentText.innerText = `${progress}%`;
+        loadBar.style.width = `${progress}%`;
+        
+        // Update status text based on progress
+        const statusIdx = Math.floor((progress / 100) * (statuses.length - 1));
+        loadStatus.innerText = statuses[statusIdx];
+
+        if (progress === 100) {
+          clearInterval(interval);
+          setTimeout(() => {
+            // Show welcome animation
+            loadPercentText.innerText = "Welcome!";
+            loadStatus.innerText = "Enjoy the music!";
+            setTimeout(() => {
+              // Swap screens
+              document.getElementById('screen-loader').classList.remove('active');
+              document.getElementById('screen-welcome').classList.add('active');
+              // Display jukebox
+              document.getElementById('jukebox-box').style.display = 'flex';
+              // Initialize & start music immediately!
+              jukebox.play();
+            }, 800);
+          }, 400);
+        }
+      }, 100);
+    });
+
+    /* ==========================================================================
+       F. JUKEBOX CONTROLLER INTERACTION
+       ========================================================================== */
+    const jukePlayBtn = document.getElementById('btn-juke-play');
+    const jukeNextBtn = document.getElementById('btn-juke-next');
+    const jukeVolSlider = document.getElementById('juke-vol-slider');
+    const jukeVolIcon = document.getElementById('juke-vol-icon');
+
+    jukePlayBtn.addEventListener('click', () => {
+      jukebox.toggle();
+    });
+
+    jukeNextBtn.addEventListener('click', () => {
+      jukebox.next();
+    });
+
+    jukeVolSlider.addEventListener('input', (e) => {
+      const val = parseFloat(e.target.value);
+      jukebox.setVolume(val);
+      if (val === 0) {
+        jukeVolIcon.innerText = "🔇";
+      } else if (val < 0.4) {
+        jukeVolIcon.innerText = "🔈";
+      } else {
+        jukeVolIcon.innerText = "🔊";
+      }
+    });
+
+    jukeVolIcon.addEventListener('click', () => {
+      if (jukeVolSlider.value > 0) {
+        jukeVolSlider.value = 0;
+        jukebox.setVolume(0);
+        jukeVolIcon.innerText = "🔇";
+      } else {
+        jukeVolSlider.value = 0.3;
+        jukebox.setVolume(0.3);
+        jukeVolIcon.innerText = "🔈";
+      }
+    });
+
+    /* ==========================================================================
+       G. WELCOME PAGE VALIDATION & CARD CLICKS
+       ========================================================================== */
     const nameInput = document.getElementById('player-name');
     const startBtn = document.getElementById('btn-start');
     const categoryCards = document.querySelectorAll('.category-card');
@@ -1247,25 +1688,21 @@
 
     nameInput.addEventListener('input', checkStartValidity);
 
-    // Category Card Selection
     categoryCards.forEach(card => {
       card.addEventListener('click', () => {
-        sound.playPop();
+        jukebox.playClickSFX();
         categoryCards.forEach(c => c.classList.remove('selected'));
         card.classList.add('selected');
         playerProfile.category = card.getAttribute('data-category');
       });
     });
 
-    // Start Quest Trigger
     startBtn.addEventListener('click', () => {
-      sound.playPop();
+      jukebox.playClickSFX();
       
-      // Capture details
       playerProfile.name = nameInput.value.trim();
       playerProfile.age = parseInt(document.getElementById('player-age').value);
       
-      // Set Theme & Avatar depending on Category
       const selectedCategory = QUIZ_DATA[playerProfile.category];
       document.body.className = selectedCategory.theme;
       document.getElementById('player-avatar').innerText = selectedCategory.avatar;
@@ -1278,18 +1715,14 @@
       gameState.score = 0;
       gameState.answersLocked = false;
       
-      // Switch Screen
       switchScreen('screen-welcome', 'screen-game');
       renderQuestion();
     });
 
-    // Play Again Trigger
     document.getElementById('btn-replay').addEventListener('click', () => {
-      sound.playPop();
-      // Remove specific theme on body
+      jukebox.playClickSFX();
       document.body.className = '';
       switchScreen('screen-gameover', 'screen-welcome');
-      // Reset input validation
       checkStartValidity();
     });
 
@@ -1299,29 +1732,25 @@
     }
 
     /* ==========================================================================
-       F. GAME ENGINE & RENDER
+       H. GAMEPLAY ENGINE & RENDERING
        ========================================================================== */
     function renderQuestion() {
       const qIndex = gameState.currentQuestionIndex;
       const question = gameState.questions[qIndex];
       const card = document.getElementById('main-card');
       
-      // Reset card flash states
       card.classList.remove('correct-flash', 'incorrect-flash');
       gameState.answersLocked = false;
 
-      // Update header indicators
-      document.getElementById('question-index-label').innerText = `Question ${qIndex + 1} of ${gameState.questions.length} for ${playerProfile.name}`;
+      document.getElementById('question-index-label').innerText = `Question ${qIndex + 1} of 10 for ${playerProfile.name}`;
       document.getElementById('score-badge').innerText = `Score: ${gameState.score}`;
       
-      // Progress Bar Update
-      const progressPercent = ((qIndex) / gameState.questions.length) * 100;
+      // Progress Bar: scaled for 10 questions
+      const progressPercent = (qIndex / 10) * 100;
       document.getElementById('progress-bar-fill').style.width = `${progressPercent}%`;
 
-      // Render Question Prompt
       document.getElementById('question-text').innerText = question.question;
 
-      // Render Answer Options
       const area = document.getElementById('answers-area');
       area.innerHTML = '';
 
@@ -1329,11 +1758,9 @@
         const grid = document.createElement('div');
         grid.className = 'mcq-grid';
         
-        // Randomize options order to keep it exciting
-        const options = [...question.options];
-        
-        options.forEach((opt, idx) => {
-          const bullet = String.fromCharCode(65 + idx); // A, B, C, D
+        // Dynamic options
+        question.options.forEach((opt, idx) => {
+          const bullet = String.fromCharCode(65 + idx);
           const btn = document.createElement('button');
           btn.className = 'mcq-option';
           btn.innerHTML = `<span class="mcq-bullet">${bullet}</span> <span class="mcq-opt-text">${opt}</span>`;
@@ -1345,7 +1772,6 @@
         });
         area.appendChild(grid);
       } else {
-        // Text input type
         const wrap = document.createElement('div');
         wrap.className = 'text-input-wrapper';
         
@@ -1360,7 +1786,6 @@
         submitBtn.id = 'btn-submit-text';
         submitBtn.innerText = 'Check Answer 🚀';
 
-        // Check answer on click
         submitBtn.addEventListener('click', () => {
           if (gameState.answersLocked) return;
           const userAns = input.value.trim();
@@ -1371,7 +1796,6 @@
           checkAnswer(userAns);
         });
 
-        // Check answer on Enter key
         input.addEventListener('keydown', (e) => {
           if (e.key === 'Enter') {
             submitBtn.click();
@@ -1382,7 +1806,6 @@
         wrap.appendChild(submitBtn);
         area.appendChild(wrap);
 
-        // Autofocus input
         setTimeout(() => input.focus(), 100);
       }
     }
@@ -1399,17 +1822,14 @@
       if (question.type === 'mcq') {
         isCorrect = (userAnswer === question.answer);
       } else {
-        // Text input cleansing: case-insensitive & double-space clean
+        // Space-cleaned case-insensitive comparisons
         const cleanedUser = userAnswer.toLowerCase().replace(/\s+/g, ' ').trim();
         const cleanedAns = question.answer.toLowerCase().replace(/\s+/g, ' ').trim();
-        
-        // Simple verification or secondary matching (e.g. "echo" matches "an echo" or "the echo")
         isCorrect = (cleanedUser === cleanedAns || 
                      cleanedUser.includes(cleanedAns) && cleanedAns.length > 2 ||
                      cleanedAns.includes(cleanedUser) && cleanedUser.length > 2);
       }
 
-      // Configure visual overlay feedback
       const overlay = document.getElementById('feedback-overlay');
       const fEmoji = document.getElementById('feedback-emoji');
       const fTitle = document.getElementById('feedback-title');
@@ -1418,18 +1838,15 @@
       overlay.className = 'feedback-overlay active';
 
       if (isCorrect) {
-        // Correct Action
         gameState.score++;
         card.classList.add('correct-flash');
         overlay.classList.add('correct');
         scoreBadge.classList.add('pop');
         setTimeout(() => scoreBadge.classList.remove('pop'), 600);
         
-        // Pop audio
-        sound.playCorrect();
+        jukebox.playCorrectSFX();
         triggerConfetti();
 
-        // Personalized feedback
         const positivePhrases = [
           `Superb work, ${playerProfile.name}! 🎉`,
           `Awesome job, ${playerProfile.name}! 🌟`,
@@ -1442,22 +1859,18 @@
         fMsg.innerHTML = positivePhrases[Math.floor(Math.random() * positivePhrases.length)];
 
       } else {
-        // Incorrect Action
         card.classList.add('incorrect-flash');
         overlay.classList.add('incorrect');
-        sound.playIncorrect();
+        jukebox.playIncorrectSFX();
 
-        // Reveal correct answer
         fEmoji.innerText = '🤔';
         fTitle.innerText = "Oops!";
         fMsg.innerHTML = `Nice try, ${playerProfile.name}! The correct answer was:<br><strong>${question.answer}</strong>`;
       }
 
-      // Progress dynamically after 2.5 seconds
       setTimeout(() => {
-        overlay.className = 'feedback-overlay'; // hide overlay
+        overlay.className = 'feedback-overlay';
         
-        // Move to next question or end game
         gameState.currentQuestionIndex++;
         if (gameState.currentQuestionIndex < gameState.questions.length) {
           renderQuestion();
@@ -1468,45 +1881,44 @@
     }
 
     /* ==========================================================================
-       G. GAME OVER LOGIC
+       I. GAME OVER SCREEN
        ========================================================================== */
     function finishGame() {
-      // Update Progress Bar to 100%
       document.getElementById('progress-bar-fill').style.width = '100%';
       
-      // Trigger game over audio
-      sound.playVictory();
+      jukebox.playVictorySFX();
       triggerConfetti();
 
-      // Set score details
       document.getElementById('final-score').innerText = gameState.score;
 
-      // Stars rating logic
+      // 10 Stars update
       const stars = document.querySelectorAll('#stars-row .star');
       stars.forEach((star, idx) => {
         if (idx < gameState.score) {
           setTimeout(() => {
             star.classList.add('active');
-          }, idx * 200);
+          }, idx * 150);
         } else {
           star.classList.remove('active');
         }
       });
 
-      // Personalized Sign-off
       const titleEl = document.getElementById('gameover-title');
       const descEl = document.getElementById('gameover-desc');
       
       const s = gameState.score;
-      if (s === 5) {
+      if (s === 10) {
         titleEl.innerText = `Mind-Blowing, ${playerProfile.name}! 🏆`;
-        descEl.innerText = "Perfect score! You tackled every single logic puzzle with ease. You are officially a Logic Mastermind!";
-      } else if (s >= 3) {
+        descEl.innerText = "Perfect 10/10! You tackled every single logic puzzle and trivia query perfectly. You are officially a Mastermind!";
+      } else if (s >= 7) {
         titleEl.innerText = `Fantastic Job, ${playerProfile.name}! 🌟`;
-        descEl.innerText = `Great brainpower! You scored ${s} out of 5 correctly. Keep exploring and learning!`;
+        descEl.innerText = `Stellar brainpower! You scored ${s} out of 10. You did incredibly well!`;
+      } else if (s >= 5) {
+        titleEl.innerText = `Great Effort, ${playerProfile.name}! 💡`;
+        descEl.innerText = `Good thinking! You scored ${s} out of 10. Give it another try to see if you can hit a perfect score!`;
       } else {
-        titleEl.innerText = `Awesome Effort, ${playerProfile.name}! 💡`;
-        descEl.innerText = `You earned a score of ${s} out of 5. Every mistake is just a step to becoming smarter. Give it another try!`;
+        titleEl.innerText = `Keep Training, ${playerProfile.name}! 💪`;
+        descEl.innerText = `You earned a score of ${s} out of 10. Mistakes are how we learn. Let's restart and boost that score!`;
       }
 
       switchScreen('screen-game', 'screen-gameover');
