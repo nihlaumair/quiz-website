@@ -1183,8 +1183,7 @@
         const track = this.tracks[this.currentTrackIndex];
         const note = track.notes[this.noteIndex];
         
-        // Duration calculations
-        const stepDuration = 60 / track.tempo / 4; // Length of a sixteenth note
+        const stepDuration = 60 / track.tempo / 4; 
         const noteDuration = note.d * stepDuration;
 
         if (note.f > 0) {
@@ -1204,11 +1203,9 @@
         osc.connect(noteGain);
         noteGain.connect(this.gainNode);
 
-        // Soft, retro keyboard/chime wave
         osc.type = (this.currentTrackIndex === 4) ? 'square' : 'triangle';
         osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
 
-        // Envelope
         noteGain.gain.setValueAtTime(0, this.ctx.currentTime);
         noteGain.gain.linearRampToValueAtTime(0.25, this.ctx.currentTime + 0.01);
         noteGain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + duration - 0.02);
@@ -1217,7 +1214,6 @@
         osc.stop(this.ctx.currentTime + duration);
       }
 
-      /* Game Sound Effects (Synthesized instantly) */
       playClickSFX() {
         try {
           this.init();
@@ -1297,209 +1293,587 @@
     const jukebox = new Jukebox();
 
     /* ==========================================================================
-       B. QUESTIONS DATA (10 per category)
+       B. QUESTIONS DATA (90 questions total: 3 difficulties x 3 categories x 10 q)
        ========================================================================== */
     const QUIZ_DATA = {
       logic: {
         title: "Logic Wonders",
         theme: "theme-logic",
         avatar: "🧠",
-        questions: [
-          {
-            question: "A farmer has a fox, a goose, and a bag of beans. He must cross a river in a boat that can only hold him and one item. If left alone, the fox eats the goose, or the goose eats the beans. What should he take across first?",
-            type: "mcq",
-            options: ["The fox", "The goose", "The beans", "Nothing"],
-            answer: "The goose"
-          },
-          {
-            question: "What number comes next in this pattern?\n2, 4, 8, 16, 32, ...",
-            type: "text",
-            answer: "64",
-            placeholder: "Type the next number..."
-          },
-          {
-            question: "Which weighs more: a pound of feathers or a pound of gold bricks?",
-            type: "mcq",
-            options: ["The feathers weigh more", "The gold bricks weigh more", "They weigh the exact same", "Feathers don't weigh anything"],
-            answer: "They weigh the exact same"
-          },
-          {
-            question: "I speak without a mouth and hear without ears. I have no body, but I come alive with wind. What am I?",
-            type: "text",
-            answer: "echo",
-            placeholder: "Type your one-word answer..."
-          },
-          {
-            question: "A prisoner has a choice of three escape doors. Behind Door 1 is a raging fire. Behind Door 2 is a group of assassins with loaded bows. Behind Door 3 is a lion that hasn't eaten in three years. Which door is the safest?",
-            type: "mcq",
-            options: ["Door 1 (Raging Fire)", "Door 2 (Assassins)", "Door 3 (Starved Lion)", "All are equally dangerous"],
-            answer: "Door 3 (Starved Lion)"
-          },
-          {
-            question: "What has keys but can't open locks, has space but no room, and you can enter but can't go outside?",
-            type: "text",
-            answer: "keyboard",
-            placeholder: "Type your one-word answer..."
-          },
-          {
-            question: "The more of them you take, the more you leave behind. What are they?",
-            type: "mcq",
-            options: ["Footsteps", "Photos", "Seconds", "Breaths"],
-            answer: "Footsteps"
-          },
-          {
-            question: "I am full of holes but still hold water. What am I?",
-            type: "text",
-            answer: "sponge",
-            placeholder: "Type your one-word answer..."
-          },
-          {
-            question: "What can travel around the world while staying in a corner?",
-            type: "mcq",
-            options: ["A stamp", "A letter", "An airplane", "A postcard"],
-            answer: "A stamp"
-          },
-          {
-            question: "A father's child is not my brother, nor my sister, yet it is the child of my father. Who is it?",
-            type: "text",
-            answer: "myself",
-            placeholder: "Hint: Who is typing this?"
-          }
-        ]
+        questions: {
+          junior: [
+            {
+              question: "What goes up but never comes down?",
+              type: "text",
+              answer: "age",
+              placeholder: "Type your answer..."
+            },
+            {
+              question: "What number comes next in this pattern?\n5, 10, 15, 20, ...",
+              type: "text",
+              answer: "25",
+              placeholder: "Next number..."
+            },
+            {
+              question: "If you have 3 apples and you take away 2, how many apples do you have?",
+              type: "mcq",
+              options: ["1 apple", "2 apples", "3 apples", "0 apples"],
+              answer: "2 apples"
+            },
+            {
+              question: "What has hands but cannot clap?",
+              type: "text",
+              answer: "clock",
+              placeholder: "Type your answer..."
+            },
+            {
+              question: "Which letter of the alphabet has the most water?",
+              type: "mcq",
+              options: ["The letter A", "The letter C", "The letter G", "The letter W"],
+              answer: "The letter C"
+            },
+            {
+              question: "What has one eye but cannot see?",
+              type: "text",
+              answer: "needle",
+              placeholder: "Type your answer..."
+            },
+            {
+              question: "How many months have 28 days?",
+              type: "mcq",
+              options: ["Only 1 month", "Only 2 months", "Only 6 months", "All 12 months"],
+              answer: "All 12 months"
+            },
+            {
+              question: "I am full of holes but still hold water. What am I?",
+              type: "text",
+              answer: "sponge",
+              placeholder: "Type your answer..."
+            },
+            {
+              question: "I have legs but I cannot walk. What am I?",
+              type: "mcq",
+              options: ["A table", "A dog", "A bicycle", "A pair of pants"],
+              answer: "A table"
+            },
+            {
+              question: "What belongs to you, but other people use it much more than you do?",
+              type: "text",
+              answer: "name",
+              placeholder: "Type your answer..."
+            }
+          ],
+          intermediate: [
+            {
+              question: "A farmer has a fox, a goose, and a bag of beans. He must cross a river in a boat that can only hold him and one item. If left alone, the fox eats the goose, or the goose eats the beans. What should he take across first?",
+              type: "mcq",
+              options: ["The fox", "The goose", "The beans", "Nothing"],
+              answer: "The goose"
+            },
+            {
+              question: "What number comes next in this pattern?\n2, 4, 8, 16, 32, ...",
+              type: "text",
+              answer: "64",
+              placeholder: "Type the next number..."
+            },
+            {
+              question: "Which weighs more: a pound of feathers or a pound of gold bricks?",
+              type: "mcq",
+              options: ["Feathers weigh more", "Gold bricks weigh more", "They weigh the exact same", "Feathers don't weigh anything"],
+              answer: "They weigh the exact same"
+            },
+            {
+              question: "I speak without a mouth and hear without ears. I have no body, but I come alive with wind. What am I?",
+              type: "text",
+              answer: "echo",
+              placeholder: "Type your one-word answer..."
+            },
+            {
+              question: "A prisoner has a choice of three escape doors. Behind Door 1 is a raging fire. Behind Door 2 is a group of assassins with loaded bows. Behind Door 3 is a lion that hasn't eaten in three years. Which door is the safest?",
+              type: "mcq",
+              options: ["Door 1 (Raging Fire)", "Door 2 (Assassins)", "Door 3 (Starved Lion)", "All are equally dangerous"],
+              answer: "Door 3 (Starved Lion)"
+            },
+            {
+              question: "What has keys but can't open locks, has space but no room, and you can enter but can't go outside?",
+              type: "text",
+              answer: "keyboard",
+              placeholder: "Type your one-word answer..."
+            },
+            {
+              question: "The more of them you take, the more you leave behind. What are they?",
+              type: "mcq",
+              options: ["Footsteps", "Photos", "Seconds", "Breaths"],
+              answer: "Footsteps"
+            },
+            {
+              question: "I am full of holes but still hold water. What am I?",
+              type: "text",
+              answer: "sponge",
+              placeholder: "Type your one-word answer..."
+            },
+            {
+              question: "What can travel around the world while staying in a corner?",
+              type: "mcq",
+              options: ["A stamp", "A letter", "An airplane", "A postcard"],
+              answer: "A stamp"
+            },
+            {
+              question: "A father's child is not my brother, nor my sister, yet it is the child of my father. Who is it?",
+              type: "text",
+              answer: "myself",
+              placeholder: "Hint: Who is typing this?"
+            }
+          ],
+          senior: [
+            {
+              question: "A man is looking at a photograph of someone. His friend asks who it is. The man replies:\n'Brothers and sisters I have none, but that man's father is my father's son.'\nWho is in the photograph?",
+              type: "mcq",
+              options: ["The man himself", "The man's son", "The man's father", "The man's nephew"],
+              answer: "The man's son"
+            },
+            {
+              question: "If 5 machines take 5 minutes to make 5 widgets, how long would it take 100 machines to make 100 widgets?",
+              type: "text",
+              answer: "5",
+              placeholder: "Type the minutes..."
+            },
+            {
+              question: "A doctor gives you three pills and tells you to take one every half hour. How long will the pills last?",
+              type: "mcq",
+              options: ["1.5 hours", "1 hour", "2 hours", "30 minutes"],
+              answer: "1 hour"
+            },
+            {
+              question: "What is the next number in this prime sequence?\n2, 3, 5, 7, 11, 13, ...",
+              type: "text",
+              answer: "17",
+              placeholder: "Next prime number..."
+            },
+            {
+              question: "You are running in a race. You pass the person in second place. What place are you in now?",
+              type: "mcq",
+              options: ["First place", "Second place", "Third place", "Last place"],
+              answer: "Second place"
+            },
+            {
+              question: "I have no voice, yet I speak to you. I have no brain, yet I know all things. What am I?",
+              type: "text",
+              answer: "book",
+              placeholder: "Type your answer..."
+            },
+            {
+              question: "If a blue house is made of blue bricks, and a yellow house of yellow bricks, what is a green house made of?",
+              type: "mcq",
+              options: ["Green bricks", "Glass", "Wood", "Leaves"],
+              answer: "Glass"
+            },
+            {
+              question: "Mary has four daughters, and each of her daughters has a brother. How many children does Mary have in total?",
+              type: "text",
+              answer: "5",
+              placeholder: "Type the total children..."
+            },
+            {
+              question: "Which word in the dictionary is spelled incorrectly?",
+              type: "mcq",
+              options: ["Spelling", "Incorrectly", "Pronunciation", "Vocabulary"],
+              answer: "Incorrectly"
+            },
+            {
+              question: "What is always in front of you but cannot be seen?",
+              type: "text",
+              answer: "future",
+              placeholder: "Type your answer..."
+            }
+          ]
+        }
       },
       world: {
         title: "World Explorer",
         theme: "theme-world",
         avatar: "🌍",
-        questions: [
-          {
-            question: "Which is the tallest mountain in the world above sea level?",
-            type: "mcq",
-            options: ["Mount Kilimanjaro", "K2", "Mount Everest", "Mount Fuji"],
-            answer: "Mount Everest"
-          },
-          {
-            question: "What is the capital city of France, famous for the Eiffel Tower?",
-            type: "text",
-            answer: "Paris",
-            placeholder: "Type the capital city..."
-          },
-          {
-            question: "Which river is the longest in the world?",
-            type: "mcq",
-            options: ["Amazon River", "Nile River", "Mississippi River", "Yangtze River"],
-            answer: "Nile River"
-          },
-          {
-            question: "In which country would you find the ancient Pyramids of Giza?",
-            type: "text",
-            answer: "Egypt",
-            placeholder: "Type the country name..."
-          },
-          {
-            question: "Which is the smallest continent in the world by land area?",
-            type: "mcq",
-            options: ["Europe", "Australia", "Antarctica", "South America"],
-            answer: "Australia"
-          },
-          {
-            question: "What is the name of the largest ocean on Earth?",
-            type: "text",
-            answer: "Pacific",
-            placeholder: "Type the ocean name..."
-          },
-          {
-            question: "Which country is home to the Kangaroo?",
-            type: "mcq",
-            options: ["Australia", "South Africa", "India", "Brazil"],
-            answer: "Australia"
-          },
-          {
-            question: "What is the capital city of Japan?",
-            type: "text",
-            answer: "Tokyo",
-            placeholder: "Type the capital city..."
-          },
-          {
-            question: "Which famous wall is over 13,000 miles long?",
-            type: "mcq",
-            options: ["Great Wall of China", "Berlin Wall", "Western Wall", "Roman Wall"],
-            answer: "Great Wall of China"
-          },
-          {
-            question: "What is the name of the largest hot desert in the world?",
-            type: "text",
-            answer: "Sahara",
-            placeholder: "Type the desert name..."
-          }
-        ]
+        questions: {
+          junior: [
+            {
+              question: "What is the capital city of the USA?",
+              type: "text",
+              answer: "Washington D.C.",
+              placeholder: "Type capital..."
+            },
+            {
+              question: "Which country is shaped like a boot on the map?",
+              type: "mcq",
+              options: ["Spain", "Italy", "France", "Greece"],
+              answer: "Italy"
+            },
+            {
+              question: "What is the largest country in the world by size?",
+              type: "text",
+              answer: "Russia",
+              placeholder: "Type country name..."
+            },
+            {
+              question: "In which country is the famous Taj Mahal located?",
+              type: "mcq",
+              options: ["India", "China", "Egypt", "Mexico"],
+              answer: "India"
+            },
+            {
+              question: "Which is the coldest continent on Earth?",
+              type: "text",
+              answer: "Antarctica",
+              placeholder: "Type continent..."
+            },
+            {
+              question: "How many oceans are there in the world?",
+              type: "mcq",
+              options: ["3 oceans", "4 oceans", "5 oceans", "7 oceans"],
+              answer: "5 oceans"
+            },
+            {
+              question: "What is the capital city of England?",
+              type: "text",
+              answer: "London",
+              placeholder: "Type capital..."
+            },
+            {
+              question: "Which is the largest hot desert in the world?",
+              type: "mcq",
+              options: ["Sahara Desert", "Gobi Desert", "Kalahari Desert", "Atacama Desert"],
+              answer: "Sahara Desert"
+            },
+            {
+              question: "Which country currently has the largest population in the world?",
+              type: "text",
+              answer: "India",
+              placeholder: "Type country name..."
+            },
+            {
+              question: "Which city is famous for the Statue of Liberty?",
+              type: "mcq",
+              options: ["New York City", "Los Angeles", "Paris", "London"],
+              answer: "New York City"
+            }
+          ],
+          intermediate: [
+            {
+              question: "Which is the tallest mountain in the world above sea level?",
+              type: "mcq",
+              options: ["Mount Kilimanjaro", "K2", "Mount Everest", "Mount Fuji"],
+              answer: "Mount Everest"
+            },
+            {
+              question: "What is the capital city of France, famous for the Eiffel Tower?",
+              type: "text",
+              answer: "Paris",
+              placeholder: "Type the capital city..."
+            },
+            {
+              question: "Which river is the longest in the world?",
+              type: "mcq",
+              options: ["Amazon River", "Nile River", "Mississippi River", "Yangtze River"],
+              answer: "Nile River"
+            },
+            {
+              question: "In which country would you find the ancient Pyramids of Giza?",
+              type: "text",
+              answer: "Egypt",
+              placeholder: "Type the country name..."
+            },
+            {
+              question: "Which is the smallest continent in the world by land area?",
+              type: "mcq",
+              options: ["Europe", "Australia", "Antarctica", "South America"],
+              answer: "Australia"
+            },
+            {
+              question: "What is the name of the largest ocean on Earth?",
+              type: "text",
+              answer: "Pacific",
+              placeholder: "Type the ocean name..."
+            },
+            {
+              question: "Which country is home to the Kangaroo?",
+              type: "mcq",
+              options: ["Australia", "South Africa", "India", "Brazil"],
+              answer: "Australia"
+            },
+            {
+              question: "What is the capital city of Japan?",
+              type: "text",
+              answer: "Tokyo",
+              placeholder: "Type the capital city..."
+            },
+            {
+              question: "Which famous wall is over 13,000 miles long?",
+              type: "mcq",
+              options: ["Great Wall of China", "Berlin Wall", "Western Wall", "Roman Wall"],
+              answer: "Great Wall of China"
+            },
+            {
+              question: "What is the name of the largest hot desert in the world?",
+              type: "text",
+              answer: "Sahara",
+              placeholder: "Type the desert name..."
+            }
+          ],
+          senior: [
+            {
+              question: "Which is the largest country in South America by land area?",
+              type: "mcq",
+              options: ["Argentina", "Brazil", "Colombia", "Peru"],
+              answer: "Brazil"
+            },
+            {
+              question: "What is the capital city of Australia?",
+              type: "text",
+              answer: "Canberra",
+              placeholder: "Type capital..."
+            },
+            {
+              question: "Which strait separates Asia from North America?",
+              type: "mcq",
+              options: ["Gibraltar Strait", "Bering Strait", "Malacca Strait", "Magellan Strait"],
+              answer: "Bering Strait"
+            },
+            {
+              question: "Which European country is divided into cantons and is famous for neutrality?",
+              type: "text",
+              answer: "Switzerland",
+              placeholder: "Type country name..."
+            },
+            {
+              question: "What is the deepest point in the world's oceans?",
+              type: "mcq",
+              options: ["Puerto Rico Trench", "Mariana Trench", "Java Trench", "Sunda Trench"],
+              answer: "Mariana Trench"
+            },
+            {
+              question: "Which African country contains the ancient Pyramids of Meroe (not Giza)?",
+              type: "text",
+              answer: "Sudan",
+              placeholder: "Type country name..."
+            },
+            {
+              question: "Which is the most populous metropolitan area in the world?",
+              type: "mcq",
+              options: ["New York City", "Tokyo", "Shanghai", "Delhi"],
+              answer: "Tokyo"
+            },
+            {
+              question: "In which ocean is the island nation of Madagascar located?",
+              type: "text",
+              answer: "Indian",
+              placeholder: "Type ocean name..."
+            },
+            {
+              question: "Which country has territory situated in both Europe and Asia?",
+              type: "mcq",
+              options: ["Egypt", "Turkey", "Greece", "Iran"],
+              answer: "Turkey"
+            },
+            {
+              question: "What is the capital city of Canada?",
+              type: "text",
+              answer: "Ottawa",
+              placeholder: "Type capital..."
+            }
+          ]
+        }
       },
       space: {
         title: "Space & Science",
         theme: "theme-space",
         avatar: "🚀",
-        questions: [
-          {
-            question: "Which planet in our solar system is known as the Red Planet?",
-            type: "mcq",
-            options: ["Venus", "Jupiter", "Mars", "Saturn"],
-            answer: "Mars"
-          },
-          {
-            question: "What gas do humans need to breathe in order to survive?",
-            type: "text",
-            answer: "oxygen",
-            placeholder: "Type the gas name..."
-          },
-          {
-            question: "How many days does it take for Earth to complete one full orbit around the Sun?",
-            type: "mcq",
-            options: ["30 days", "365 days", "24 days", "100 days"],
-            answer: "365 days"
-          },
-          {
-            question: "What is the boiling point of pure water in degrees Celsius?",
-            type: "text",
-            answer: "100",
-            placeholder: "Type the temperature number..."
-          },
-          {
-            question: "Which force pulls objects down toward the center of the Earth?",
-            type: "mcq",
-            options: ["Magnetism", "Friction", "Gravity", "Wind Force"],
-            answer: "Gravity"
-          },
-          {
-            question: "What is the center of our Solar System?",
-            type: "text",
-            answer: "sun",
-            placeholder: "Type the object name..."
-          },
-          {
-            question: "Which is the largest planet in our Solar System?",
-            type: "mcq",
-            options: ["Jupiter", "Saturn", "Earth", "Neptune"],
-            answer: "Jupiter"
-          },
-          {
-            question: "What is the name of the galaxy we live in?",
-            type: "text",
-            answer: "milky way",
-            placeholder: "Type the galaxy name..."
-          },
-          {
-            question: "What state of matter is ice?",
-            type: "mcq",
-            options: ["Solid", "Liquid", "Gas", "Plasma"],
-            answer: "Solid"
-          },
-          {
-            question: "What is the chemical formula for water?",
-            type: "text",
-            answer: "H2O",
-            placeholder: "Type the formula..."
-          }
-        ]
+        questions: {
+          junior: [
+            {
+              question: "Which planet is closest to the Sun?",
+              type: "mcq",
+              options: ["Venus", "Mercury", "Earth", "Mars"],
+              answer: "Mercury"
+            },
+            {
+              question: "What is the name of our solar system's central star?",
+              type: "text",
+              answer: "sun",
+              placeholder: "Type star name..."
+            },
+            {
+              question: "How many legs does a spider have?",
+              type: "mcq",
+              options: ["6 legs", "8 legs", "10 legs", "12 legs"],
+              answer: "8 legs"
+            },
+            {
+              question: "What gas do plants release that humans breathe in?",
+              type: "text",
+              answer: "oxygen",
+              placeholder: "Type gas name..."
+            },
+            {
+              question: "The Earth's Moon is classified as a planet or a satellite?",
+              type: "mcq",
+              options: ["A Planet", "A Satellite", "A Star", "A Comet"],
+              answer: "A Satellite"
+            },
+            {
+              question: "At what temperature does water freeze in degrees Celsius?",
+              type: "text",
+              answer: "0",
+              placeholder: "Type number..."
+            },
+            {
+              question: "What color do you get when you mix blue and yellow paint?",
+              type: "mcq",
+              options: ["Green", "Purple", "Orange", "Brown"],
+              answer: "Green"
+            },
+            {
+              question: "What do we call a scientist who studies stars and planets?",
+              type: "text",
+              answer: "astronomer",
+              placeholder: "Type job name..."
+            },
+            {
+              question: "Which is the fastest land animal in the world?",
+              type: "mcq",
+              options: ["Cheetah", "Lion", "Horse", "Greyhound"],
+              answer: "Cheetah"
+            },
+            {
+              question: "What force pulls things down toward the ground?",
+              type: "text",
+              answer: "gravity",
+              placeholder: "Type force name..."
+            }
+          ],
+          intermediate: [
+            {
+              question: "Which planet in our solar system is known as the Red Planet?",
+              type: "mcq",
+              options: ["Venus", "Jupiter", "Mars", "Saturn"],
+              answer: "Mars"
+            },
+            {
+              question: "What gas do humans need to breathe in order to survive?",
+              type: "text",
+              answer: "oxygen",
+              placeholder: "Type the gas name..."
+            },
+            {
+              question: "How many days does it take for Earth to complete one full orbit around the Sun?",
+              type: "mcq",
+              options: ["30 days", "365 days", "24 days", "100 days"],
+              answer: "365 days"
+            },
+            {
+              question: "What is the boiling point of pure water in degrees Celsius?",
+              type: "text",
+              answer: "100",
+              placeholder: "Type the temperature number..."
+            },
+            {
+              question: "Which force pulls objects down toward the center of the Earth?",
+              type: "mcq",
+              options: ["Magnetism", "Friction", "Gravity", "Wind Force"],
+              answer: "Gravity"
+            },
+            {
+              question: "What is the center of our Solar System?",
+              type: "text",
+              answer: "sun",
+              placeholder: "Type the object name..."
+            },
+            {
+              question: "Which is the largest planet in our Solar System?",
+              type: "mcq",
+              options: ["Jupiter", "Saturn", "Earth", "Neptune"],
+              answer: "Jupiter"
+            },
+            {
+              question: "What is the name of the galaxy we live in?",
+              type: "text",
+              answer: "milky way",
+              placeholder: "Type the galaxy name..."
+            },
+            {
+              question: "What state of matter is ice?",
+              type: "mcq",
+              options: ["Solid", "Liquid", "Gas", "Plasma"],
+              answer: "Solid"
+            },
+            {
+              question: "What is the chemical formula for water?",
+              type: "text",
+              answer: "H2O",
+              placeholder: "Type the formula..."
+            }
+          ],
+          senior: [
+            {
+              question: "What is the primary gas that makes up the atmosphere of Venus?",
+              type: "mcq",
+              options: ["Oxygen", "Nitrogen", "Carbon Dioxide", "Methane"],
+              answer: "Carbon Dioxide"
+            },
+            {
+              question: "What is the chemical symbol for the element Gold?",
+              type: "text",
+              answer: "Au",
+              placeholder: "Type symbol (2 letters)..."
+            },
+            {
+              question: "Which cell organelle is known as the powerhouse of the cell?",
+              type: "mcq",
+              options: ["Nucleus", "Ribosome", "Mitochondria", "Golgi Apparatus"],
+              answer: "Mitochondria"
+            },
+            {
+              question: "What is the speed of light in a vacuum (approx. in km/s)?",
+              type: "text",
+              answer: "300000",
+              placeholder: "Type number (e.g. 300000)..."
+            },
+            {
+              question: "What type of star is our Sun classified as?",
+              type: "mcq",
+              options: ["Red Giant", "White Dwarf", "Yellow Dwarf", "Blue Supergiant"],
+              answer: "Yellow Dwarf"
+            },
+            {
+              question: "What is the most abundant gas in the Earth's atmosphere?",
+              type: "text",
+              answer: "nitrogen",
+              placeholder: "Type gas name..."
+            },
+            {
+              question: "Who formulated the theory of General Relativity?",
+              type: "mcq",
+              options: ["Isaac Newton", "Albert Einstein", "Galileo Galilei", "Stephen Hawking"],
+              answer: "Albert Einstein"
+            },
+            {
+              question: "What is the pH level of pure neutral water?",
+              type: "text",
+              answer: "7",
+              placeholder: "Type number..."
+            },
+            {
+              question: "What is the name of the closest spiral galaxy to our Milky Way?",
+              type: "mcq",
+              options: ["Andromeda", "Triangulum", "Sombrero", "Large Magellanic Cloud"],
+              answer: "Andromeda"
+            },
+            {
+              question: "What subatomic particle in an atom has a negative electrical charge?",
+              type: "text",
+              answer: "electron",
+              placeholder: "Type particle name..."
+            }
+          ]
+        }
       }
     };
 
@@ -1606,23 +1980,18 @@
         loadPercentText.innerText = `${progress}%`;
         loadBar.style.width = `${progress}%`;
         
-        // Update status text based on progress
         const statusIdx = Math.floor((progress / 100) * (statuses.length - 1));
         loadStatus.innerText = statuses[statusIdx];
 
         if (progress === 100) {
           clearInterval(interval);
           setTimeout(() => {
-            // Show welcome animation
             loadPercentText.innerText = "Welcome!";
             loadStatus.innerText = "Enjoy the music!";
             setTimeout(() => {
-              // Swap screens
               document.getElementById('screen-loader').classList.remove('active');
               document.getElementById('screen-welcome').classList.add('active');
-              // Display jukebox
               document.getElementById('jukebox-box').style.display = 'flex';
-              // Initialize & start music immediately!
               jukebox.play();
             }, 800);
           }, 400);
@@ -1703,14 +2072,25 @@
       playerProfile.name = nameInput.value.trim();
       playerProfile.age = parseInt(document.getElementById('player-age').value);
       
+      // Determine difficulty tier based on age selection
+      let difficulty = "intermediate";
+      if (playerProfile.age <= 10) {
+        difficulty = "junior";
+      } else if (playerProfile.age >= 13) {
+        difficulty = "senior";
+      }
+
       const selectedCategory = QUIZ_DATA[playerProfile.category];
       document.body.className = selectedCategory.theme;
       document.getElementById('player-avatar').innerText = selectedCategory.avatar;
       document.getElementById('quiz-player-name').innerText = playerProfile.name;
-      document.getElementById('category-label').innerText = selectedCategory.title;
       
-      // Load questions
-      gameState.questions = [...selectedCategory.questions];
+      // Capitalize first letter of difficulty level for display
+      const diffLabel = difficulty.charAt(0).toUpperCase() + difficulty.slice(1);
+      document.getElementById('category-label').innerText = `${selectedCategory.title} (${diffLabel})`;
+      
+      // Load selected category questions for the matching difficulty
+      gameState.questions = [...selectedCategory.questions[difficulty]];
       gameState.currentQuestionIndex = 0;
       gameState.score = 0;
       gameState.answersLocked = false;
@@ -1758,7 +2138,6 @@
         const grid = document.createElement('div');
         grid.className = 'mcq-grid';
         
-        // Dynamic options
         question.options.forEach((opt, idx) => {
           const bullet = String.fromCharCode(65 + idx);
           const btn = document.createElement('button');
@@ -1825,6 +2204,8 @@
         // Space-cleaned case-insensitive comparisons
         const cleanedUser = userAnswer.toLowerCase().replace(/\s+/g, ' ').trim();
         const cleanedAns = question.answer.toLowerCase().replace(/\s+/g, ' ').trim();
+        
+        // Match numbers or clean text inclusions
         isCorrect = (cleanedUser === cleanedAns || 
                      cleanedUser.includes(cleanedAns) && cleanedAns.length > 2 ||
                      cleanedAns.includes(cleanedUser) && cleanedUser.length > 2);
