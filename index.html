@@ -949,12 +949,15 @@
         <div class="preloader-wrapper">
           <span class="loader-icon">💡</span>
           <h2>Logic Thinking</h2>
-          <p class="subtitle" style="margin-bottom: 0.5rem;">Loading Game Resources...</p>
+          <p class="subtitle" id="loader-subtitle" style="margin-bottom: 0.5rem;">Loading Game Resources...</p>
           <div class="loading-number" id="load-percent">0%</div>
-          <div class="loader-bar-outer">
+          <div class="loader-bar-outer" id="load-bar-container">
             <div class="loader-bar-inner" id="load-bar"></div>
           </div>
           <p class="loader-status" id="load-status">Connecting nodes...</p>
+          <button class="btn btn-primary" id="btn-enter-game" style="display: none; margin-top: 1rem; width: 80%; max-width: 280px; animation: bouncePulse 2s infinite ease-in-out;">
+            Enter & Play Music 🎵
+          </button>
         </div>
       </section>
       
@@ -1094,6 +1097,9 @@
         if (!this.ctx) {
           this.ctx = new (window.AudioContext || window.webkitAudioContext)();
         }
+        if (this.ctx.state === 'suspended') {
+          this.ctx.resume();
+        }
       }
       playClick() {
         try { this.init(); const osc = this.ctx.createOscillator(); const g = this.ctx.createGain(); osc.connect(g); g.connect(this.ctx.destination); osc.frequency.setValueAtTime(400, this.ctx.currentTime); osc.frequency.exponentialRampToValueAtTime(800, this.ctx.currentTime + 0.08); g.gain.setValueAtTime(0.1, this.ctx.currentTime); g.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.08); osc.start(); osc.stop(this.ctx.currentTime + 0.08); } catch(e){}
@@ -1111,7 +1117,7 @@
     const sfx = new SFXController();
 
     /* ==========================================================================
-       B. YOUTUBE REAL SONG PLAYLIST MANAGER (Restricted embeds removed/updated)
+       B. YOUTUBE REAL SONG PLAYLIST MANAGER
        ========================================================================== */
     const JUKEBOX_SONGS = [
       { name: "💖 Hubbuka Fi Qalbi - Nasheed", id: "VatATQACUhE" },
@@ -1170,10 +1176,17 @@
 
     function playMusic() {
       if (isPlayerReady && ytPlayer) {
-        ytPlayer.playVideo();
-        isMusicPlaying = true;
-        document.getElementById('btn-juke-play').innerText = "⏸";
-        document.getElementById('juke-song-title').innerText = JUKEBOX_SONGS[currentSongIndex].name;
+        try {
+          ytPlayer.playVideo();
+          isMusicPlaying = true;
+          document.getElementById('btn-juke-play').innerText = "⏸";
+          document.getElementById('juke-song-title').innerText = JUKEBOX_SONGS[currentSongIndex].name;
+        } catch (e) {
+          console.error("Playback failed, retrying...", e);
+          setTimeout(playMusic, 500);
+        }
+      } else {
+        setTimeout(playMusic, 500);
       }
     }
 
@@ -2148,12 +2161,15 @@
     });
 
     /* ==========================================================================
-       F. PRELOADER ENGINE
+       F. PRELOADER ENGINE (Unlocks Audio on Click Interaction)
        ========================================================================== */
     window.addEventListener('DOMContentLoaded', () => {
       const loadPercentText = document.getElementById('load-percent');
       const loadBar = document.getElementById('load-bar');
       const loadStatus = document.getElementById('load-status');
+      const enterBtn = document.getElementById('btn-enter-game');
+      const subtitle = document.getElementById('loader-subtitle');
+      const barContainer = document.getElementById('load-bar-container');
       
       const statuses = [
         "Unpacking brain cells... 🧠",
@@ -2189,17 +2205,28 @@
         if (progress === 100) {
           clearInterval(interval);
           setTimeout(() => {
-            loadPercentText.innerText = "Welcome!";
-            loadStatus.innerText = "Enjoy the music!";
-            setTimeout(() => {
-              document.getElementById('screen-loader').classList.remove('active');
-              document.getElementById('screen-welcome').classList.add('active');
-              document.getElementById('jukebox-box').style.display = 'flex';
-              playMusic();
-            }, 800);
+            // Hide progress displays, show interactive enter button to bypass autoplay blocks
+            loadPercentText.style.display = 'none';
+            barContainer.style.display = 'none';
+            subtitle.innerText = "Game resources ready!";
+            loadStatus.innerText = "Click below to unlock and play music!";
+            enterBtn.style.display = 'inline-flex';
           }, 400);
         }
       }, 100);
+
+      // User click triggers audio context unlock and music play
+      enterBtn.addEventListener('click', () => {
+        sfx.init(); // Unlock SFX context
+        sfx.playClick();
+        
+        document.getElementById('screen-loader').classList.remove('active');
+        document.getElementById('screen-welcome').classList.add('active');
+        document.getElementById('jukebox-box').style.display = 'flex';
+        
+        // Start background music now that browser permits it!
+        playMusic();
+      });
     });
 
     /* ==========================================================================
